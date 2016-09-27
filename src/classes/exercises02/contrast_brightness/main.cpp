@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
     Mat new_image = Mat::zeros(image.size(), image.type());
     double alpha, beta;
     cout << " Basic Linear Transforms " << endl;
-    cout << "* Enter the saturation value [1.0-3.0]: ";
+    cout << "* Enter the contrast value [1.0-3.0]: ";
     cin >> alpha;
     cout<<"* Enter the brightness value [0-100]: ";
     cin >> beta;
