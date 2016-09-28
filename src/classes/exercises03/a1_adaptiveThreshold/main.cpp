@@ -18,9 +18,9 @@ int main(int argc, char **argv) {
 
         char received = (char)waitKey(10);
         if (received == '+')
-            lastState = (lastState + 1) % 4;
+            lastState = (lastState + 1) % 5;
         else if (received == '-')
-            lastState = (lastState - 1) % 4;
+            lastState = lastState==0 ? 4 : lastState-1;
         else if (received == 'q' || received == 'Q')
             break;
 
@@ -30,9 +30,13 @@ int main(int argc, char **argv) {
                 break;
             case 2:
                 cvtColor(frame, frame, CV_BGR2GRAY);
-                adaptiveThreshold(frame, frame, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 3, 0);
+                threshold(frame,frame, 127, 255, THRESH_BINARY);
                 break;
             case 3:
+                cvtColor(frame, frame, CV_BGR2GRAY);
+                adaptiveThreshold(frame, frame, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 3, 0);
+                break;
+            case 4:
                 cvtColor(frame, frame, CV_BGR2GRAY);
                 adaptiveThreshold(frame, frame, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 3, 0);
         }
