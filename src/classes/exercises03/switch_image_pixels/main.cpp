@@ -9,7 +9,10 @@ using namespace cv;
 
 int main(int argc, char **argv)
 {
-    Mat image = imread("lena_color_512.tif", CV_LOAD_IMAGE_COLOR);
+    string filename = "lena_color_512.tif";
+    if (argc > 1)
+        filename = string(argv[1]);
+    Mat image = imread(filename, CV_LOAD_IMAGE_COLOR);
     int height = image.rows;
     int width = image.cols;
 
@@ -31,6 +34,8 @@ int main(int argc, char **argv)
     imshow("Image", image);
     imshow("New image", new_image);
 
-    imwrite("lena_color_512_shuffle.tif", new_image);
+    stringstream ss;
+    ss << "shuffled_" << filename;
+    imwrite(ss.str(), new_image);
     while ((char)waitKey(30) !='q');
 }
