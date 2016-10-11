@@ -76,6 +76,7 @@ int main(int argc, char **argv) {
         vconcat(histImage, histImage3, histImage);
 
         imshow("Histograms", histImage );
+        imshow("Camera", src);
 
 
         if((char)waitKey(30)=='q')

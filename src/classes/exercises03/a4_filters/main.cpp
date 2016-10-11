@@ -15,9 +15,16 @@ int main(int argc, char **argv) {
         return -1;
 
     Mat src;
-    int kernel_size = 0, i = 0;
+    int kernel_size = 0, i = 4;
     while (true) {
         cap >> src;
+        char received = (char)waitKey(30);
+        if (received == '+')
+            i++;
+        else if (received == '-')
+            i--;
+        else if (received == 'q' || received == 'Q')
+            break;
         kernel_size = 3 + 2 * ( i % 25 );
 
         Mat blur_dst, gaussian_blur_dst,median_blur_dst,bilateral_filter_dst;
@@ -27,7 +34,7 @@ int main(int argc, char **argv) {
         medianBlur ( src, median_blur_dst, kernel_size );
         bilateralFilter ( src, bilateral_filter_dst, kernel_size, kernel_size*2, kernel_size/2 );
 
-        putText(blur_dst, "Blur", cvPoint(10,20), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(0,0,0), 1, CV_AA);
+        putText(blur_dst, "Blur", cvPoint(10,40), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(0,0,0), 1, CV_AA);
         putText(gaussian_blur_dst, "Gaussian Blur", cvPoint(10,20), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(0,0,0), 1, CV_AA);
         putText(median_blur_dst, "Median Blur", cvPoint(10,20), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(0,0,0), 1, CV_AA);
         putText(bilateral_filter_dst, "Bilateral Filter", cvPoint(10,20), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(0,0,0), 1, CV_AA);
@@ -35,10 +42,10 @@ int main(int argc, char **argv) {
         hconcat(blur_dst,gaussian_blur_dst,blur_dst);
         hconcat(median_blur_dst,bilateral_filter_dst,median_blur_dst);
         vconcat(blur_dst, median_blur_dst, blur_dst);
-        imshow("Filters", blur_dst);
 
-        i++;
-        if((char)waitKey(30)=='q')
-            return 0;
+        putText(blur_dst, "Kernel Size: " + to_string(kernel_size),
+                cvPoint(10, 20),
+                FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,0,0), 1, CV_AA);
+        imshow("Filters", blur_dst);
     }
 }
