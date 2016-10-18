@@ -33,7 +33,7 @@ int main( int argc, char** argv )
         /// Reduce noise with a kernel 3x3
         blur( src_gray, detected_edges, Size(3,3) );
         /// Canny detector
-        Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, 3 + 2 * kernel_size);
+        Canny( src_gray, detected_edges, lowThreshold, lowThreshold*ratio, 3 + 2 * kernel_size);
         /// Using Canny's output as a mask, we display our result
         dst = Scalar::all(0);
 
