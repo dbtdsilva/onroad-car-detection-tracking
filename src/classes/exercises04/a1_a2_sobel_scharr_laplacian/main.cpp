@@ -1,8 +1,5 @@
-
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
-#include <stdlib.h>
-#include <stdio.h>
 
 using namespace std;
 using namespace cv;
@@ -21,7 +18,6 @@ int main(int argc, char **argv) {
     int ddepth = CV_16S;
 
     int kernel = 1;
-
 
     while (true) {
         cap >> src;
@@ -53,14 +49,22 @@ int main(int argc, char **argv) {
         addWeighted( abs_grad_x_sobel, 0.5, abs_grad_y_sobel, 0.5, 0, sobel );
         addWeighted( abs_grad_x_scharr, 0.5, abs_grad_y_scharr, 0.5, 0, scharr );
 
+        Mat laplacian;
+        Laplacian(src_gray, laplacian, ddepth, 1+kernel*2, scale, delta,BORDER_DEFAULT);
+        convertScaleAbs( laplacian, laplacian );
+
+
         putText(sobel, "Sobel, kernel " + to_string(1+kernel*2), cvPoint(10, 20),FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,255,255), 1, CV_AA);
         putText(scharr, "Scharr", cvPoint(10, 20),FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,255,255), 1, CV_AA);
 
-        hconcat(sobel, scharr, sobel);
 
+        hconcat(sobel, scharr, sobel);
+        putText(laplacian, "Laplacian, kernel " + to_string(1+kernel*2), cvPoint(10, 20),FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,255,255), 1, CV_AA);
+
+        imshow("image2", laplacian);
         imshow("image", sobel);
         createTrackbar( "scale", "image", &scale, 100 );
-        createTrackbar( "Sobel Kernel Size", "image", &kernel, 3 );
+        createTrackbar( "Kernel Size", "image", &kernel, 3 );
         if((char)waitKey(30)=='q')
             return 0;
     }
