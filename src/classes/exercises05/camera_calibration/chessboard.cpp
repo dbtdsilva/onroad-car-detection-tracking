@@ -50,7 +50,6 @@ int main(int argc, char **argv)
 {
   
   // ChessBoard Properties
-  int n_boards = 13; //Number of images
   int board_w = 9;
   int board_h = 6;
 
@@ -85,10 +84,13 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  while(cv::waitKey(30) < 0)
+  while(sucesses <= 15)
   {
     cap >> image; // get a new frame from camera
     imshow("cam", image);
+
+    if (waitKey(30) >= 0)
+      break;
 
     corner_count = FindAndDisplayChessboard(image, board_w, board_h, &corners);
     imshow("Camera", image);
@@ -139,10 +141,10 @@ int main(int argc, char **argv)
   std::cout << std::endl << "Intrinsics = " << std::endl << " " << intrinsic << std::endl << std::endl;
   std::cout << std::endl << "Distortion = " << std::endl << " " << distCoeffs << std::endl << std::endl;
   std::cout << std::endl << "Translations = " << std::endl ;
-  for (i = 0; i < n_boards; i++)
+  for (i = 0; i < sucesses; i++)
     std::cout << std::endl << tvecs.at(i);
   std::cout << std::endl << "Rotations= " << std::endl;
-  for (i = 0; i < n_boards; i++)
+  for (i = 0; i < sucesses; i++)
     std::cout << std::endl << rvecs.at(i);
 
   FileStorage fs("../CamParams.xml", FileStorage::WRITE);
