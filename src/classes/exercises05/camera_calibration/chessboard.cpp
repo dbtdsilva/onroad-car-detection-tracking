@@ -20,6 +20,7 @@ Libraries:
 #include <opencv2/imgproc/imgproc.hpp>
 
 using namespace cv;
+
 // Function FindAndDisplayChessboard
 // find corners in a cheesboard with board_w x board_h dimensions
 // Display the corners in image and return number of detected corners
@@ -28,16 +29,16 @@ int FindAndDisplayChessboard(Mat image, int board_w, int board_h, std::vector<Po
   int board_size = board_w * board_h;
   CvSize board_sz = cvSize(board_w, board_h);
 
-  Mat grey_image;
+  Mat gray_image;
 
-  cvtColor(image, grey_image, CV_BGR2GRAY);
+  cvtColor(image, gray_image, CV_BGR2GRAY);
 
   // find chessboard corners
-  bool found = findChessboardCorners(grey_image, board_sz, *corners, 0);
-
+  bool found = findChessboardCorners(gray_image, board_sz, *corners, 0);
   // Draw results
-  if (true)
+  if (found)
   {
+    cornerSubPix(gray_image, *corners, Size(11, 11), Size(-1, -1), TermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 30, 0.1));
     drawChessboardCorners(image, board_sz, Mat(*corners), found);
     //imshow("Calibration", image);
     //printf("\n Number of corners: %lu", corners->size());
@@ -81,8 +82,7 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  char recv = waitKey(30);
-  char last_key;
+  char recv, last_key;
   bool not_saved = false;
 
   int total_calibrations = 20;
