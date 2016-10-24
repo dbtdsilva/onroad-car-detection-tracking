@@ -40,7 +40,7 @@ int FindAndDisplayChessboard(Mat image, int board_w, int board_h, std::vector<Po
   {
     drawChessboardCorners(image, board_sz, Mat(*corners), found);
     //imshow("Calibration", image);
-    printf("\n Number of corners: %lu", corners->size());
+    //printf("\n Number of corners: %lu", corners->size());
     //waitKey(0);
   }
   return corners->size();
@@ -66,10 +66,7 @@ int main(int argc, char **argv)
 
   Mat image;
   int i;
-
   int sucesses = 0;
-
-
   // chessboard coordinates
   std::vector<Point3f> obj;
   for (int j = 0; j < board_sz; j++)
@@ -84,25 +81,34 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  while(sucesses <= 15)
+  char recv = waitKey(30);
+  char last_key;
+  bool not_saved = false;
+
+  int total_calibrations = 20;
+  while(sucesses < total_calibrations)
   {
     cap >> image; // get a new frame from camera
-    imshow("cam", image);
-
-    if (waitKey(30) >= 0)
-      break;
-
     corner_count = FindAndDisplayChessboard(image, board_w, board_h, &corners);
     imshow("Camera", image);
-    if (corner_count == board_w * board_h)
+
+    last_key = recv;
+    recv = waitKey(30);
+    if (recv == 'q' || recv == 'Q')
+      break;
+    if (recv != last_key)
+      not_saved = true;
+    
+    if (corner_count == board_w * board_h && not_saved && recv != -1)
     {
       image_points.push_back(corners);
       object_points.push_back(obj);
       sucesses++;
 
-      waitKey(0);
+      not_saved = false;
+      printf("%d out of %d recorded\n", sucesses, total_calibrations);
+      waitKey(500);
     }
-
   }
 
   Mat intrinsic = Mat(3, 3, CV_32FC1);

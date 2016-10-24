@@ -40,7 +40,7 @@ int FindAndDisplayChessboard(Mat image, int board_w, int board_h, std::vector<Po
   {
     drawChessboardCorners(image, board_sz, Mat(*corners), found);
     //imshow("Calibration", image);
-    printf("\n Number of corners: %lu", corners->size());
+    //printf("\n Number of corners: %lu", corners->size());
     //waitKey(0);
   }
   return corners->size();
