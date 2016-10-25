@@ -64,7 +64,7 @@ int main(int argc, char **argv)
   int board_sz = board_w * board_h;
 
   // Chessboard coordinates and image pixels
-  std::vector<Point3f> object_points;
+  std::vector<Point3f> object_points, new_object_points;
   std::vector<Point2f> image_points;
 
   // Corners detected in each image
@@ -85,8 +85,8 @@ int main(int argc, char **argv)
     return -1;
   }
 
+  /*
   // Create a cube
-  std::vector<Point3f> new_object_points;
   new_object_points.push_back(Point3f(0.0, 0.0, 0.0)); // 0
   new_object_points.push_back(Point3f(0.0, 0.0, 1.0)); // 1
   new_object_points.push_back(Point3f(1.0, 0.0, 0.0)); // 2
@@ -95,7 +95,14 @@ int main(int argc, char **argv)
   new_object_points.push_back(Point3f(0.0, 1.0, 1.0)); // 5
   new_object_points.push_back(Point3f(1.0, 1.0, 0.0)); // 6
   new_object_points.push_back(Point3f(1.0, 1.0, 1.0)); // 7
+  */
 
+  // Create a pyramid
+  new_object_points.push_back(Point3f(0.0, 0.0, 0.0)); // 0
+  new_object_points.push_back(Point3f(0.0, 5.0, 0.0)); // 1
+  new_object_points.push_back(Point3f(5.0, 0.0, 0.0)); // 2
+  new_object_points.push_back(Point3f(5.0, 5.0, 0.0)); // 3
+  new_object_points.push_back(Point3f(2.5, 2.5, 5.0)); // 4
 
   Mat rvec;
   Mat tvec;
@@ -119,6 +126,8 @@ int main(int argc, char **argv)
       if (found) {
         projectPoints(new_object_points, rvec, tvec, intrinsic, distCoeffs, projected_points);
 
+        /*
+        // Lines for cube
         line(image, projected_points[0], projected_points[1], Scalar(0, 0, 255), 2, 8, 0);
         line(image, projected_points[0], projected_points[2], Scalar(0, 0, 255), 2, 8, 0);
         line(image, projected_points[0], projected_points[4], Scalar(0, 0, 255), 2, 8, 0);
@@ -131,6 +140,17 @@ int main(int argc, char **argv)
         line(image, projected_points[4], projected_points[6], Scalar(0, 0, 255), 2, 8, 0);
         line(image, projected_points[5], projected_points[7], Scalar(0, 0, 255), 2, 8, 0);
         line(image, projected_points[6], projected_points[7], Scalar(0, 0, 255), 2, 8, 0);
+        */
+
+        // Lines for pyramid
+        line(image, projected_points[0], projected_points[1], Scalar(0, 0, 255), 2, 8, 0);
+        line(image, projected_points[0], projected_points[2], Scalar(0, 0, 255), 2, 8, 0);
+        line(image, projected_points[0], projected_points[4], Scalar(0, 0, 255), 2, 8, 0);
+        line(image, projected_points[1], projected_points[3], Scalar(0, 0, 255), 2, 8, 0);
+        line(image, projected_points[1], projected_points[4], Scalar(0, 0, 255), 2, 8, 0);
+        line(image, projected_points[2], projected_points[3], Scalar(0, 0, 255), 2, 8, 0);
+        line(image, projected_points[2], projected_points[4], Scalar(0, 0, 255), 2, 8, 0);
+        line(image, projected_points[3], projected_points[4], Scalar(0, 0, 255), 2, 8, 0);
       }
     }
 

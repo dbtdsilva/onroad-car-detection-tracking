@@ -124,50 +124,50 @@ int main(int argc, char **argv)
   fs.release();
 
 
-  // Create a cube
-  std::vector<Point3f> new_object_points;
-  new_object_points.push_back(Point3f(0.0, 0.0, 0.0)); // 0
-  new_object_points.push_back(Point3f(0.0, 0.0, 1.0)); // 1
-  new_object_points.push_back(Point3f(1.0, 0.0, 0.0)); // 2
-  new_object_points.push_back(Point3f(1.0, 0.0, 1.0)); // 3
-  new_object_points.push_back(Point3f(0.0, 1.0, 0.0)); // 4
-  new_object_points.push_back(Point3f(0.0, 1.0, 1.0)); // 5
-  new_object_points.push_back(Point3f(1.0, 1.0, 0.0)); // 6
-  new_object_points.push_back(Point3f(1.0, 1.0, 1.0)); // 7
+// Create a cube
+std::vector<Point3f> new_object_points;
+new_object_points.push_back(Point3f(0.0, 0.0, 0.0)); // 0
+new_object_points.push_back(Point3f(0.0, 0.0, 1.0)); // 1
+new_object_points.push_back(Point3f(1.0, 0.0, 0.0)); // 2
+new_object_points.push_back(Point3f(1.0, 0.0, 1.0)); // 3
+new_object_points.push_back(Point3f(0.0, 1.0, 0.0)); // 4
+new_object_points.push_back(Point3f(0.0, 1.0, 1.0)); // 5
+new_object_points.push_back(Point3f(1.0, 1.0, 0.0)); // 6
+new_object_points.push_back(Point3f(1.0, 1.0, 1.0)); // 7
 
-  for (i = 0; i < n_boards; i++)
+for (i = 0; i < n_boards; i++)
+{
+  // read image
+  sprintf(filename, "..//images//left%02d.jpg", i + 1);
+  printf("\nReading %s", filename);
+  image = imread(filename, CV_LOAD_IMAGE_COLOR);
+
+
+  if (!image.data)
   {
-    // read image
-    sprintf(filename, "..//images//left%02d.jpg", i + 1);
-    printf("\nReading %s", filename);
-    image = imread(filename, CV_LOAD_IMAGE_COLOR);
-
-
-    if (!image.data)
-    {
-      printf("\nCould not load image file: %s\n", filename);
-      getchar();
-      return 0;
-    }
-
-    std::vector<cv::Point2f> projected_points;
-    projectPoints(new_object_points, rvecs.at(i), tvecs.at(i), intrinsic, distCoeffs, projected_points);
-
-    line(image, projected_points[0], projected_points[1], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[0], projected_points[2], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[0], projected_points[4], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[1], projected_points[3], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[1], projected_points[5], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[2], projected_points[3], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[2], projected_points[6], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[3], projected_points[7], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[4], projected_points[5], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[4], projected_points[6], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[5], projected_points[7], Scalar(0, 0, 255), 2, 8, 0);
-    line(image, projected_points[6], projected_points[7], Scalar(0, 0, 255), 2, 8, 0);
-    imshow("Calibration", image);
-    waitKey(0);
+    printf("\nCould not load image file: %s\n", filename);
+    getchar();
+    return 0;
   }
-  
-  return 0;
+
+  std::vector<cv::Point2f> projected_points;
+  projectPoints(new_object_points, rvecs.at(i), tvecs.at(i), intrinsic, distCoeffs, projected_points);
+
+  line(image, projected_points[0], projected_points[1], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[0], projected_points[2], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[0], projected_points[4], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[1], projected_points[3], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[1], projected_points[5], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[2], projected_points[3], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[2], projected_points[6], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[3], projected_points[7], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[4], projected_points[5], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[4], projected_points[6], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[5], projected_points[7], Scalar(0, 0, 255), 2, 8, 0);
+  line(image, projected_points[6], projected_points[7], Scalar(0, 0, 255), 2, 8, 0);
+  imshow("Calibration", image);
+  waitKey(0);
+}
+
+return 0;
 }

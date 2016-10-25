@@ -18,8 +18,10 @@ Libraries:
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <sstream>
 
 using namespace cv;
+using namespace std;
 
 // Function FindAndDisplayChessboard
 // find corners in a cheesboard with board_w x board_h dimensions
@@ -86,10 +88,16 @@ int main(int argc, char **argv)
   bool not_saved = false;
 
   int total_calibrations = 20;
+  stringstream ss;
   while(sucesses < total_calibrations)
   {
     cap >> image; // get a new frame from camera
     corner_count = FindAndDisplayChessboard(image, board_w, board_h, &corners);
+
+    ss.str("");
+    ss << sucesses << " out of " << total_calibrations << " calibrations";
+    putText(image, "Press any key to calibrate! Q to exit", cvPoint(10, 20),FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,255,255), 1, CV_AA);
+    putText(image, ss.str(), cvPoint(10, 40),FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,255,255), 1, CV_AA);
     imshow("Camera", image);
 
     last_key = recv;
@@ -105,9 +113,7 @@ int main(int argc, char **argv)
       object_points.push_back(obj);
       sucesses++;
 
-      not_saved = false;
-      printf("%d out of %d recorded\n", sucesses, total_calibrations);
-      waitKey(500);
+      not_saved = false;  
     }
   }
 
