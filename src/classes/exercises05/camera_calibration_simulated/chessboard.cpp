@@ -80,7 +80,7 @@ int main(int argc, char **argv)
   for (i = 0; i < n_boards; i++)
   {
     // read image
-    sprintf(filename, "..//images//left%02d.jpg", i + 1);
+    sprintf(filename, "left%02d.jpg", i + 1);
     printf("\nReading %s", filename);
     image = imread(filename, CV_LOAD_IMAGE_COLOR);
 

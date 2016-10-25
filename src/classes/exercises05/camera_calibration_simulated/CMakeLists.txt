@@ -3,5 +3,12 @@ PROJECT( calib )
 FIND_PACKAGE( OpenCV REQUIRED )
 #find_package(PCL 1.2 REQUIRED)
 
+set(dir ${CMAKE_CURRENT_SOURCE_DIR})
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${dir}/build")
+
+#copy data file to build directory
+file(GLOB JPG "${CMAKE_CURRENT_SOURCE_DIR}/images/*.jpg")
+file(COPY ${JPG} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
 ADD_EXECUTABLE( calib chessboard.cpp )
 TARGET_LINK_LIBRARIES( calib ${OpenCV_LIBS} )
