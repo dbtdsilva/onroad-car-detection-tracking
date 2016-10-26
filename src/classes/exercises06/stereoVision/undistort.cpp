@@ -1,7 +1,5 @@
 #include <iostream>
 #include <vector>
-
-// OpenCV Includes
 #include <stdio.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -9,7 +7,6 @@
 
 using namespace cv;
 using namespace std;
-
 
 int main(int argc, char **argv)
 {
@@ -37,7 +34,6 @@ int main(int argc, char **argv)
     Mat src, dst;
 
     for (int i = 0; i < n_boards; i++) {
-        // read image
         sprintf(filename, "left%02d.jpg", i + 1);
         printf("Reading %s \n", filename);
         src = imread(filename, CV_LOAD_IMAGE_COLOR);
@@ -54,7 +50,6 @@ int main(int argc, char **argv)
         waitKey(0);
     }
     for (int i = 0; i < n_boards; i++) {
-        // read image
         sprintf(filename, "right%02d.jpg", i + 1);
         printf("Reading %s \n", filename);
         src = imread(filename, CV_LOAD_IMAGE_COLOR);
