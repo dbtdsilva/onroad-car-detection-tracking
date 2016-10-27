@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <stdio.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
@@ -91,6 +90,7 @@ int main(int argc, char **argv) {
     Mat essentialMatrix;
     Mat fundamentalMatrix;
 
+#if CV_VERSION_MAJOR < 3
     double rms = stereoCalibrate(object_points, image_points_left, image_points_right,
                                  intrinsic[0], distortionCoefficients[0],
                                  intrinsic[1], distortionCoefficients[1],
@@ -101,6 +101,18 @@ int main(int argc, char **argv) {
                                  CV_CALIB_SAME_FOCAL_LENGTH +
                                  CV_CALIB_RATIONAL_MODEL +
                                  CV_CALIB_FIX_K3 + CV_CALIB_FIX_K4 + CV_CALIB_FIX_K5);
+#else
+    double rms = stereoCalibrate(object_points, image_points_left, image_points_right,
+                                 intrinsic[0], distortionCoefficients[0],
+                                 intrinsic[1], distortionCoefficients[1],
+                                 imageR.size(), rotationMatrix, translationVector, essentialMatrix, fundamentalMatrix,
+                                 CV_CALIB_FIX_ASPECT_RATIO +
+                                 CV_CALIB_ZERO_TANGENT_DIST +
+                                 CV_CALIB_SAME_FOCAL_LENGTH +
+                                 CV_CALIB_RATIONAL_MODEL +
+                                 CV_CALIB_FIX_K3 + CV_CALIB_FIX_K4 + CV_CALIB_FIX_K5,
+                                 TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 100, 1e-5));
+#endif
     cout << "re-projection error = " << rms << endl;
 
     FileStorage fs("../CamParams.xml", FileStorage::WRITE);
