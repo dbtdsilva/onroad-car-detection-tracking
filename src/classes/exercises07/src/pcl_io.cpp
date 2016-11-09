@@ -4,71 +4,60 @@
 #include <pcl/point_types.h>
 
 
-char key='1'; 
+char key = '1';
 
- class SimpleOpenNIViewer
- {
-   public:
-     pcl::visualization::CloudViewer* viewer; 
-     
-     static void pcl_keyboard_callback(const pcl::visualization::KeyboardEvent& event,void* viewer_void)
-      {
-	if(event.keyDown())
-	{
-	  char keyCode = event.getKeyCode();
-	  switch(keyCode)
-	  {
-	    case 87:  // W
-	    case 119: // w
-	      key ='w';
-	      break;
-	  }
-      }
-      }
-      
-      SimpleOpenNIViewer () 
-         { 
-                viewer= new pcl::visualization::CloudViewer("PCL OpenNI Viewer"); 
-                viewer->registerKeyboardCallback(SimpleOpenNIViewer::pcl_keyboard_callback,(void*)NULL); 
-         } 
+class SimpleOpenNIViewer {
+public:
+    pcl::visualization::CloudViewer *viewer;
 
-     void cloud_cb_ (const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &cloud)
-     {
-       if (!viewer->wasStopped())
-       {
-         viewer->showCloud (cloud);
-	 if (key=='w')
-	 {
-	   pcl::io::savePCDFileASCII ("test_1.pcd", *cloud);
-	   key = '1';
-	 }
-       }
-     }
+    static void pcl_keyboard_callback(const pcl::visualization::KeyboardEvent &event, void *viewer_void) {
+        if (event.keyDown()) {
+            char keyCode = event.getKeyCode();
+            switch (keyCode) {
+                case 87:  // W
+                case 119: // w
+                    key = 'w';
+                    break;
+            }
+        }
+    }
 
-     void run ()
-     {
-       pcl::Grabber* interface = new pcl::OpenNIGrabber();
+    SimpleOpenNIViewer() {
+        viewer = new pcl::visualization::CloudViewer("PCL OpenNI Viewer");
+        viewer->registerKeyboardCallback(SimpleOpenNIViewer::pcl_keyboard_callback, (void *) NULL);
+    }
 
-       boost::function<void (const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr&)> f =
-         boost::bind (&SimpleOpenNIViewer::cloud_cb_, this, _1);
+    void cloud_cb_(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &cloud) {
+        if (!viewer->wasStopped()) {
+            viewer->showCloud(cloud);
+            if (key == 'w') {
+                pcl::io::savePCDFileASCII("test_1.pcd", *cloud);
+                key = '1';
+            }
+        }
+    }
 
-       interface->registerCallback (f);
+    void run() {
+        pcl::Grabber *interface = new pcl::OpenNIGrabber();
 
-       interface->start ();
-       
-       while (!viewer->wasStopped())
-       {
-	 sleep(1);
-          //boost::this_thread::sleep (boost::posix_time::seconds (1));
-       }
+        boost::function<void(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &)> f =
+                boost::bind(&SimpleOpenNIViewer::cloud_cb_, this, _1);
 
-       interface->stop ();
-     }
- };
+        interface->registerCallback(f);
 
- int main ()
- {
-   SimpleOpenNIViewer v;
-   v.run ();
-   return 0;
- }
+        interface->start();
+
+        while (!viewer->wasStopped()) {
+            sleep(1);
+            //boost::this_thread::sleep (boost::posix_time::seconds (1));
+        }
+
+        interface->stop();
+    }
+};
+
+int main() {
+    SimpleOpenNIViewer v;
+    v.run();
+    return 0;
+}
