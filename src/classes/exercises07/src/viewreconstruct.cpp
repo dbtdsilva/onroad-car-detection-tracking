@@ -15,7 +15,6 @@ int main(int argc, char **argv) {
     FileStorage fw("../Image3D_Reconstructed.xml", FileStorage::READ);
     fw["Image"] >> image;
     fw["Image3D"] >> image3d;
-    fw["OriginalImage"] >> image_colored;
     fw.release();
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
@@ -33,9 +32,9 @@ int main(int argc, char **argv) {
             cloud->points.at(p).x = image3d.at<cv::Vec3f>(i,j)[0];
             cloud->points.at(p).y = image3d.at<cv::Vec3f>(i,j)[1];
             cloud->points.at(p).z = image3d.at<cv::Vec3f>(i,j)[2];
-            cloud->points.at(p).r = image_colored.at<cv::Vec3f>(i,j).val[0];
-            cloud->points.at(p).g = image_colored.at<cv::Vec3f>(i,j).val[1];
-            cloud->points.at(p).b = image_colored.at<cv::Vec3f>(i,j).val[2];
+            cloud->points.at(p).r = image.at<cv::Vec3b>(i,j).val[0];
+            cloud->points.at(p).g = image.at<cv::Vec3b>(i,j).val[1];
+            cloud->points.at(p).b = image.at<cv::Vec3b>(i,j).val[2];
             p++;
         }
     }

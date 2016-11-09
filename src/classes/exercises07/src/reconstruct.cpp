@@ -131,7 +131,6 @@ int main(int argc, char **argv) {
             FileStorage fw("../Image3D_Reconstructed.xml", FileStorage::WRITE);
             fw << "Image" << dst;
             fw << "Image3D" << image3d;
-            fw << "OriginalImage" << dst_left;
             fw.release();
         }
         waitKey(0);
