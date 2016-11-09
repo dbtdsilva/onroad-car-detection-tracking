@@ -55,6 +55,19 @@ int main(int argc, char **argv) {
     Mat map1x, map1y, map2x, map2y;
     Rect validPixROI[2];
 
+    cv::Mat imgDisparity8U, imgDisparity16S;
+
+    // 1- Variable definition
+    // the preset has to do with the system configuration (basic, fisheye, etc.)
+    // ndisparities is the size of disparity range,
+    // in which the optimal disparity at each pixel is searched for.
+    // SADWindowSize is the size of averaging window used to match pixel blocks
+    // (larger values mean better robustness to noise, but yield blurry disparity maps)
+    int ndisparities = 16 * 5;
+    int SADWindowSize = 21;
+    cv::Ptr<cv::StereoBM> sbm;
+    Mat gray_image_left, gray_image_right;
+
     for (int i = 0; i < n_boards; i++) {
         sprintf(filenameL, "left%02d.jpg", i + 1);
         printf("Reading %s \n", filenameL);
@@ -86,18 +99,41 @@ int main(int argc, char **argv) {
         remap(src_left, dst_left, map1x, map1y, INTER_LINEAR);
         remap(src_right, dst_right, map2x, map2y, INTER_LINEAR);
 
-        for(int y=25; y<src_left.size().height; y+=25) {
-            Point from(0, y);
-            Point to(dst_left.size().width, y);
-
-            line(dst_left, from, to, Scalar(255, 0, 0));
-            line(dst_right, from, to, Scalar(255, 0, 0));
-        }
-
         Mat dst;
         hconcat(dst_left, dst_right, dst);
         imshow("Rectified stereo images", dst);
-        setMouseCallback("Rectified stereo images", mouseHandler);
+        //setMouseCallback("Rectified stereo images", mouseHandler);
+        //waitKey(0);
+
+        // -- 2. Call the constructor for StereoBM
+        sbm = cv::StereoBM::create( ndisparities, SADWindowSize );
+
+        // -- 3. Calculate the disparity image
+        cvtColor(dst_left, gray_image_left, CV_BGR2GRAY);
+        cvtColor(dst_right, gray_image_right, CV_BGR2GRAY);
+        sbm->compute(gray_image_left, gray_image_right, imgDisparity16S);
+        // -- Check its extreme values
+        double minVal; double maxVal;
+        cv::minMaxLoc(imgDisparity16S, &minVal, &maxVal);
+        printf("Min disp: %f Max value: %f \n", minVal, maxVal);
+        // -- 4. Display it as a CV_8UC1 image
+        // Display disparity as a CV_8UC1 image
+        // the disparity will be 16-bit signed (fixed-point) or
+        // 32-bit floating-point image of the same size as left.
+        imgDisparity16S.convertTo(imgDisparity8U, CV_8UC1, 255 / (maxVal - minVal));
+        namedWindow("disparity", cv::WINDOW_NORMAL);
+        imshow("disparity", imgDisparity8U);
+
+        if (i == 0) {
+            Mat image3d;
+            reprojectImageTo3D(imgDisparity16S, image3d, Q);
+
+            FileStorage fw("../Image3D_Reconstructed.xml", FileStorage::WRITE);
+            fw << "Image" << dst;
+            fw << "Image3D" << image3d;
+            fw << "OriginalImage" << dst_left;
+            fw.release();
+        }
         waitKey(0);
     }
 
