@@ -17,15 +17,17 @@ file(COPY ${PCD} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 ADD_EXECUTABLE( reconstruct reconstruct.cpp )
 ADD_EXECUTABLE( viewCloud viewcloud.cpp )
+ADD_EXECUTABLE( viewCloudFile viewcloudfile.cpp )
 ADD_EXECUTABLE( viewReconstruct viewreconstruct.cpp )
 ADD_EXECUTABLE( viewOpenni pcl_io.cpp )
 
-include_directories( ${PCL_INCLUDE_DIRS} )
+include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
 TARGET_LINK_LIBRARIES( reconstruct ${OpenCV_LIBS} )
 TARGET_LINK_LIBRARIES( viewCloud ${PCL_LIBRARIES} ${VTK_LIBRARIES} ${OpenCV_LIBS})
+TARGET_LINK_LIBRARIES( viewCloudFile ${PCL_LIBRARIES} ${VTK_LIBRARIES} ${OpenCV_LIBS})
 TARGET_LINK_LIBRARIES( viewReconstruct ${PCL_LIBRARIES} ${VTK_LIBRARIES} ${OpenCV_LIBS})
 TARGET_LINK_LIBRARIES( viewOpenni ${OpenCV_LIBS} ${PCL_LIBRARIES} )
 
