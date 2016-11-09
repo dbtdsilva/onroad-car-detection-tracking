@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cstdio>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
@@ -90,7 +91,8 @@ int main(int argc, char **argv) {
     Mat essentialMatrix;
     Mat fundamentalMatrix;
 
-#if CV_VERSION_MAJOR < 3
+
+#if CV_MAJOR_VERSION < 3
     double rms = stereoCalibrate(object_points, image_points_left, image_points_right,
                                  intrinsic[0], distortionCoefficients[0],
                                  intrinsic[1], distortionCoefficients[1],
