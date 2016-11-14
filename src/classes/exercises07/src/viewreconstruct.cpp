@@ -11,7 +11,7 @@
 using namespace cv;
 
 int main(int argc, char **argv) {
-    Mat image3d, image, image_colored;
+    Mat image3d, image;
     FileStorage fw("../Image3D_Reconstructed.xml", FileStorage::READ);
     fw["Image"] >> image;
     fw["Image3D"] >> image3d;
@@ -40,7 +40,6 @@ int main(int argc, char **argv) {
     }
 
     imshow("RectifiedStereoImages", image);
-    imshow("RectifiedStereoImagess", image_colored);
     waitKey(100);
 
     pcl::visualization::CloudViewer viewer("Simple Cloud Viewer");
