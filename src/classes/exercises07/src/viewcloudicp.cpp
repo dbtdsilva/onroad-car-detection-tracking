@@ -7,15 +7,20 @@
 using namespace std;
 
 int main(int argc, char **argv) {
+    if (argc != 3) {
+        PCL_ERROR("Expected 2 arguments: source.pcd target.pcd");
+        return -1;
+    }
+
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud1(new pcl::PointCloud<pcl::PointXYZRGB>);
-    if (pcl::io::loadPCDFile<pcl::PointXYZRGB>("filt_office1.pcd", *cloud1) == -1) {
-        PCL_ERROR ("Couldn't read file filt_office1.pcd \n");
+    if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(argv[1], *cloud1) == -1) {
+        PCL_ERROR ("Couldn't read file image 1 \n");
         return -1;
     }
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZRGB>);
-    if (pcl::io::loadPCDFile<pcl::PointXYZRGB>("filt_office2.pcd", *cloud2) == -1) {
-        PCL_ERROR ("Couldn't read file filt_office2.pcd \n");
+    if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(argv[2], *cloud2) == -1) {
+        PCL_ERROR ("Couldn't read image 2 \n");
         return -1;
     }
 
