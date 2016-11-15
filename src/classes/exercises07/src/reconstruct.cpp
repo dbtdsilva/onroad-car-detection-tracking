@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
         namedWindow("disparity", cv::WINDOW_NORMAL);
         imshow("disparity", imgDisparity8U);
 
-        if (i == 5) {
+        if (i == 0) {
             Mat image3d;
             reprojectImageTo3D(imgDisparity16S, image3d, Q);
 

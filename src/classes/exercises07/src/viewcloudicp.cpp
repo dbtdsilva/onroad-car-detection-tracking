@@ -6,35 +6,52 @@
 
 using namespace std;
 
+#define VOXEL
+
 int main(int argc, char **argv) {
-    if (argc != 3) {
-        PCL_ERROR("Expected 2 arguments: source.pcd target.pcd");
+    if (argc < 3) {
+        PCL_ERROR("Expected 2 arguments: source.pcd target.pcd [more_targets.pcd ..]");
         return -1;
     }
 
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud1(new pcl::PointCloud<pcl::PointXYZRGB>);
-    if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(argv[1], *cloud1) == -1) {
-        PCL_ERROR ("Couldn't read file image 1 \n");
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr source(new pcl::PointCloud<pcl::PointXYZRGB>);
+    if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(argv[1], *source) == -1) {
+        PCL_ERROR ("Couldn't read image source\n");
         return -1;
     }
 
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud2(new pcl::PointCloud<pcl::PointXYZRGB>);
-    if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(argv[2], *cloud2) == -1) {
-        PCL_ERROR ("Couldn't read image 2 \n");
-        return -1;
-    }
+#ifdef VOXEL
+    pcl::VoxelGrid<pcl::PointXYZRGB> voxel_grid;
+    voxel_grid.setInputCloud(source);
+    voxel_grid.setLeafSize (0.05, 0.05, 0.05);
+    voxel_grid.filter(*source);
+#endif
 
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr aligned_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::IterativeClosestPoint<pcl::PointXYZRGB, pcl::PointXYZRGB> icp;
-    icp.setTransformationEpsilon(1e-6);
-    icp.setMaxCorrespondenceDistance(0.25);
-    icp.setMaximumIterations(50);
-    icp.setInputSource(cloud2);
-    icp.setInputTarget(cloud1);
-    icp.align(*aligned_cloud);
+    //pcl::PointCloud<pcl::PointXYZRGB>::Ptr aligned_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+    for (int i = 2; i < argc; i++) {
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr target(new pcl::PointCloud<pcl::PointXYZRGB>);
+        if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(argv[i], *target) == -1) {
+            PCL_ERROR ("Couldn't read file image target \n");
+            return -1;
+        }
+#ifdef VOXEL
+        pcl::VoxelGrid<pcl::PointXYZRGB> target_voxel;
+        target_voxel.setInputCloud(target);
+        target_voxel.setLeafSize (0.05, 0.05, 0.05);
+        target_voxel.filter(*target);
+#endif
+        pcl::IterativeClosestPoint<pcl::PointXYZRGB, pcl::PointXYZRGB> icp;
+        icp.setTransformationEpsilon(1e-6);
+        icp.setMaxCorrespondenceDistance(0.25);
+        icp.setMaximumIterations(50);
+        icp.setInputSource(source);
+        icp.setInputTarget(target);
+        icp.align(*source);
+
+    }
 
     pcl::visualization::CloudViewer viewer("Simple Cloud Viewer");
-    viewer.showCloud(aligned_cloud);
+    viewer.showCloud(source);
 
     while (!viewer.wasStopped()) {}
 
