@@ -2,12 +2,13 @@
 #include <pcl/visualization/cloud_viewer.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
-
+#include <string>
 
 char key = '1';
 
 class SimpleOpenNIViewer {
 public:
+    int counter;
     pcl::visualization::CloudViewer *viewer;
 
     static void pcl_keyboard_callback(const pcl::visualization::KeyboardEvent &event, void *viewer_void) {
@@ -23,15 +24,19 @@ public:
     }
 
     SimpleOpenNIViewer() {
+        counter = 1;
         viewer = new pcl::visualization::CloudViewer("PCL OpenNI Viewer");
         viewer->registerKeyboardCallback(SimpleOpenNIViewer::pcl_keyboard_callback, (void *) NULL);
     }
 
-    void cloud_cb_(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &cloud) {
+    void cloud_cb_(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &cloud) {
         if (!viewer->wasStopped()) {
             viewer->showCloud(cloud);
             if (key == 'w') {
-                pcl::io::savePCDFileASCII("test_1.pcd", *cloud);
+                std::ostringstream os;
+                os << "chair_" << counter++ << ".pcd";
+                std::string s = os.str();
+                pcl::io::savePCDFileASCII(s.c_str(), *cloud);
                 key = '1';
             }
         }
@@ -40,8 +45,7 @@ public:
     void run() {
         pcl::Grabber *interface = new pcl::OpenNIGrabber();
 
-        boost::function<void(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &)> f =
-                boost::bind(&SimpleOpenNIViewer::cloud_cb_, this, _1);
+        boost::function<void(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr &)> f =  boost::bind(&SimpleOpenNIViewer::cloud_cb_, this, _1);
 
         interface->registerCallback(f);
 
