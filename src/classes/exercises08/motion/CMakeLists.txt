@@ -6,11 +6,8 @@ FIND_PACKAGE( OpenCV REQUIRED )
 set(dir ${CMAKE_CURRENT_SOURCE_DIR})
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${dir}/build")
 
-#copy data file to build directory
-file(GLOB JPG "${CMAKE_CURRENT_SOURCE_DIR}/images/*.jpg")
-file(GLOB BMP "${CMAKE_CURRENT_SOURCE_DIR}/images/*.bmp")
-file(COPY ${BMP} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-file(COPY ${JPG} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-
-ADD_EXECUTABLE( lucaskanade lucaskanade.cpp)
+ADD_EXECUTABLE( lucaskanade lucaskanade.cpp )
 TARGET_LINK_LIBRARIES( lucaskanade ${OpenCV_LIBS} )
+
+ADD_EXECUTABLE( foregroundDetection foregroundDetection.cpp )
+TARGET_LINK_LIBRARIES( foregroundDetection ${OpenCV_LIBS} )
