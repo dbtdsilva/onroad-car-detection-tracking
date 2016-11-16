@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 #ifdef VOXEL
     pcl::VoxelGrid<pcl::PointXYZRGB> voxel_grid;
     voxel_grid.setInputCloud(source);
-    voxel_grid.setLeafSize (0.05, 0.05, 0.05);
+    voxel_grid.setLeafSize (0.01, 0.01, 0.01);
     voxel_grid.filter(*source);
 #endif
 
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 #ifdef VOXEL
         pcl::VoxelGrid<pcl::PointXYZRGB> target_voxel;
         target_voxel.setInputCloud(target);
-        target_voxel.setLeafSize (0.05, 0.05, 0.05);
+        target_voxel.setLeafSize (0.01, 0.01, 0.01);
         target_voxel.filter(*target);
 #endif
         pcl::IterativeClosestPoint<pcl::PointXYZRGB, pcl::PointXYZRGB> icp;
