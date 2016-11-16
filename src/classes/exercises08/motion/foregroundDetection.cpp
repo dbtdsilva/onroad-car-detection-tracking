@@ -49,14 +49,10 @@ int main(int argc, char* argv[])
     //create Background Subtractor objects
     pMOG2 = createBackgroundSubtractorMOG2(); //MOG2 approach
     if(strcmp(argv[1], "-vid") == 0) {
-        //input data coming from a video
         processVideo(argv[2]);
-    }
-    else if(strcmp(argv[1], "-img") == 0) {
-        //input data coming from a sequence of images
+    } else if(strcmp(argv[1], "-img") == 0) {
         processImages(argv[2]);
-    }
-    else {
+    } else {
         //error in reading input parameters
         cerr <<"Please, check the input parameters." << endl;
         cerr <<"Exiting..." << endl;
@@ -68,7 +64,11 @@ int main(int argc, char* argv[])
 }
 void processVideo(char* videoFilename) {
     //create the capture object
-    VideoCapture capture(videoFilename);
+    VideoCapture capture;
+    if (strcmp(videoFilename, "cam") == 0)
+        capture = VideoCapture(0);
+    else
+        capture = VideoCapture(videoFilename);
     if(!capture.isOpened()){
         //error in opening the video input
         cerr << "Unable to open video file: " << videoFilename << endl;
@@ -101,6 +101,7 @@ void processVideo(char* videoFilename) {
     //delete capture object
     capture.release();
 }
+
 void processImages(char* fistFrameFilename) {
     //read the first file of the sequence
     frame = imread(fistFrameFilename);
