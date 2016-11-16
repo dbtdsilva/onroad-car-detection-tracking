@@ -11,3 +11,6 @@ TARGET_LINK_LIBRARIES( lucaskanade ${OpenCV_LIBS} )
 
 ADD_EXECUTABLE( foregroundDetection foregroundDetection.cpp )
 TARGET_LINK_LIBRARIES( foregroundDetection ${OpenCV_LIBS} )
+
+ADD_EXECUTABLE( tracker tracker.cpp )
+TARGET_LINK_LIBRARIES( tracker ${OpenCV_LIBS} )
