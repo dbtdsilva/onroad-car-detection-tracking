@@ -6,8 +6,8 @@ FIND_PACKAGE( OpenCV REQUIRED )
 set(dir ${CMAKE_CURRENT_SOURCE_DIR})
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${dir}/build")
 
-ADD_EXECUTABLE( lukaskanade_tracking lukaskanade_tracking.cpp )
-TARGET_LINK_LIBRARIES( lukaskanade_tracking ${OpenCV_LIBS} )
+ADD_EXECUTABLE( lucaskanade_tracking lucaskanade_tracking.cpp )
+TARGET_LINK_LIBRARIES( lucaskanade_tracking ${OpenCV_LIBS} )
 
 ADD_EXECUTABLE( foregroundDetection foregroundDetection.cpp )
 TARGET_LINK_LIBRARIES( foregroundDetection ${OpenCV_LIBS} )
