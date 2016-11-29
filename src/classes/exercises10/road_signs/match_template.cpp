@@ -32,7 +32,7 @@ int main( int argc, char** argv )
     if (argc < 3)
     {
         cout << "Not enough parameters" << endl;
-        cout << "Usage:\n./MatchTemplate_Demo <image_name> <template_name> [<mask_name>]" << endl;
+        cout << "Usage:\n./match_template <image_name> <template_name> [<mask_name>]" << endl;
         return -1;
     }
 
