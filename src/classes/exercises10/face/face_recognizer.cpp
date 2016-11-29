@@ -116,11 +116,13 @@ static void read_data_csv(const string& filename, vector<Mat>& images, vector<in
         CV_Error(CV_StsBadArg, error_message);
     }
     string line, path, classlabel;
+
     while (getline(file, line)) {
         stringstream liness(line);
         getline(liness, path, separator);
         getline(liness, classlabel);
         if(!path.empty() && !classlabel.empty()) {
+
             Mat tmp = imread(path, 2);
             images.push_back(tmp);
             labels.push_back(atoi(classlabel.c_str()));
