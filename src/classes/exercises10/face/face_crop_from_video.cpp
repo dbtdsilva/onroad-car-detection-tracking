@@ -4,9 +4,7 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/objdetect.hpp"
 #include <opencv2/opencv.hpp>
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
+
 using namespace std;
 using namespace cv;
 
