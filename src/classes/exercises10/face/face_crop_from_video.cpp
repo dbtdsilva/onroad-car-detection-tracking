@@ -26,6 +26,9 @@ int main( int argc, char **argv )
     //-- 2. Read the video stream
     capture.open( -1 );
     if ( ! capture.isOpened() ) { printf("--(!)Error opening video capture\n"); return -1; }
+
+    cout << "Press 's' to store a frame." << endl;
+
     while ( capture.read(frame) )
     {
         if( frame.empty() )
@@ -60,10 +63,6 @@ void detectAndSave( Mat frame )
         if(c=='s'){
             imageCounter++;
             cout << "saving image " << format("%d.png", imageCounter) << endl;
-            //ostringstream stringStream;
-            //stringStream << dest << imageCounter<< ".pgm" << endl;
-            //vector<int> params;
-            //params.push_back(CV_IMWRITE_PXM_BINARY);
 
             imwrite( format("%d.png", imageCounter) , croppedDest );
         }
