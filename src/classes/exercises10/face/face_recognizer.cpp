@@ -19,17 +19,12 @@ static void read_csv(const string& filename, vector<Mat>& images, vector<int>& l
         CV_Error(CV_StsBadArg, error_message);
     }
     string line, path, classlabel;
-    int i = 0;
     while (getline(file, line)) {
         stringstream liness(line);
         getline(liness, path, separator);
         getline(liness, classlabel);
         if(!path.empty() && !classlabel.empty()) {
-            cout << path << endl;
             Mat tmp = imread(path, 2);
-            cout << tmp.size().height <<" : " << tmp.size().width << endl;
-            imwrite(format("this%d.png", i), tmp);
-            i++;
             images.push_back(tmp);
             labels.push_back(atoi(classlabel.c_str()));
         }
