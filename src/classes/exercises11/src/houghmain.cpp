@@ -23,7 +23,7 @@ int main(int argc, const char * argv[]) {
     moveWindow("", 0, 0);
     
     Mat image = imread(argv[1]);
-    //resize( image, image, Size(), 0.5, 0.5 );
+    resize( image, image, Size(), 2.0, 2.0 );
     
     
     /* Find the edges of the image */
@@ -96,7 +96,18 @@ int main(int argc, const char * argv[]) {
         appended = Scalar::all(0);
         temp.copyTo ( Mat(appended, Rect(0, 0, temp.cols, temp.rows)) );
         accum.copyTo( Mat(appended, Rect(temp.cols, 0, accum.cols, accum.rows))  );
-            
+        
+        
+        /* Output some text */
+        putText( appended, "Accum matrix", cvPoint(10, 40), FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,255,255), 1, CV_AA);
+        putText( appended, "[C] to show Canny edges", cvPoint( 10, 60 ), FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,255,255), 1, CV_AA);
+        putText( appended, "[Q] to quit", cvPoint( 10, 80 ), FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,255,255), 1, CV_AA);
+        sprintf( str, "Threshold: %d", threshold );
+        putText( appended, str, cvPoint( 10, 100 ), FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,255,255), 1, CV_AA);
+        sprintf( str, "Rho: %d   Theta: %d", accumIndex.y - accum.rows / 2, accumIndex.x );
+        putText( appended, str, cvPoint( 10, 120 ), FONT_HERSHEY_COMPLEX_SMALL, 1, cvScalar(255,255,255), 1, CV_AA);
+
+        
         imshow( "", appended );
         char key = waitKey(10);
         if( key == 'q' )
