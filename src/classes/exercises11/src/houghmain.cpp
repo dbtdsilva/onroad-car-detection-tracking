@@ -10,7 +10,6 @@
 #include <opencv2/opencv.hpp>
 #include <tbb/tbb.h>
 
-
 #include "Hough.h"
 
 using namespace cv;
@@ -24,7 +23,7 @@ int main(int argc, const char * argv[]) {
     moveWindow("", 0, 0);
     
     Mat image = imread(argv[1]);
-    resize( image, image, Size(), 0.5, 0.5 );
+    //resize( image, image, Size(), 0.5, 0.5 );
     
     
     /* Find the edges of the image */
@@ -62,7 +61,7 @@ int main(int argc, const char * argv[]) {
     createTrackbar( "Hough threshold", "", &threshold, 1000 );
     
     /* Stuff for drawing text */
-    CvFont font = cvFontQt("Helvetica", 14.0, CV_RGB(0, 255, 0) );
+    //CvFont font = cvFontQt("Helvetica", 14.0, CV_RGB(0, 255, 0) );
     char str[255];
     
     while( true ) {
@@ -90,24 +89,14 @@ int main(int argc, const char * argv[]) {
             pair<Point, Point> point_pair = hough.getLine( accumIndex.y, accumIndex.x );
             line( temp, point_pair.first, point_pair.second, CV_RGB(0, 255, 0), 1 );
         }
-    
+        
+
         
         /* Copy everything to output matrix */
         appended = Scalar::all(0);
         temp.copyTo ( Mat(appended, Rect(0, 0, temp.cols, temp.rows)) );
         accum.copyTo( Mat(appended, Rect(temp.cols, 0, accum.cols, accum.rows))  );
-        
-        
-        /* Output some text */
-        /*addText( appended, "Accum matrix", Point( temp.cols + 10, 15 ), font );
-        addText( appended, "[C] to show Canny edges", Point( 10, image.rows + 15 ), font );
-        addText( appended, "[Q] to quit", Point( 10, image.rows + 30 ), font );
-        sprintf( str, "Threshold: %d", threshold );
-        addText( appended, str, Point( 10, image.rows + 45 ), font );
-        sprintf( str, "Rho: %d   Theta: %d", accumIndex.y - accum.rows / 2, accumIndex.x );
-        addText( appended, str, Point( 10, image.rows + 60 ), font );*/
-
-        
+            
         imshow( "", appended );
         char key = waitKey(10);
         if( key == 'q' )
