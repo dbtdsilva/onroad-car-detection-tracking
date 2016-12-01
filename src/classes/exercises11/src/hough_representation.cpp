@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Saburo Okita. All rights reserved.
 //
 
-#include "Hough.h"
+#include "hough_representation.h"
 #include <tbb/tbb.h>
 
 Hough::Hough() {

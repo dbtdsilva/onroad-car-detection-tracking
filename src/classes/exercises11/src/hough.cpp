@@ -9,7 +9,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
-#include "Hough.h"
+#include "hough_representation.h"
 
 using namespace cv;
 using namespace std;

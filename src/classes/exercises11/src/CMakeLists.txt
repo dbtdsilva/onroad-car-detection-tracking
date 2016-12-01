@@ -13,5 +13,5 @@ file(COPY ${BMP} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY ${JPG} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY ${PNG} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-ADD_EXECUTABLE( hough houghmain.cpp Hough.cpp Hough.h )
+ADD_EXECUTABLE( hough hough.cpp hough_representation.cpp hough_representation.h )
 TARGET_LINK_LIBRARIES( hough ${OpenCV_LIBS} -ltbb )
