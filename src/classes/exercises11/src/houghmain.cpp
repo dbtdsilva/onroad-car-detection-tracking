@@ -24,6 +24,8 @@ int main(int argc, const char * argv[]) {
     Mat image = imread(argv[1]);
     resize( image, image, Size(), 2.0, 2.0 );
     
+    const double resize_factor_x = 2;
+    const double resize_factor_y = 1;
     
     /* Find the edges of the image */
     Mat gray, edges;
@@ -46,7 +48,7 @@ int main(int argc, const char * argv[]) {
     
     /* Get the size of accum matrix in advance, for the mouse call back purpose  */
     Mat accum = hough.getAccumulationMatrix();
-    resize( accum, accum, Size(), 4.0, 0.5 );
+    resize( accum, accum, Size(), 2.0 * resize_factor_x, 0.5 * resize_factor_y );
     Rect region( image.cols, 0, accum.cols, accum.rows );
     setMouseCallback( "", onMouse, static_cast<void*>( &region ) );
     
@@ -59,8 +61,7 @@ int main(int argc, const char * argv[]) {
     int threshold = 0;
     createTrackbar( "Hough threshold", "", &threshold, 1000 );
     
-    char str[255];
-    
+    char str[255];    
     while( true ) {
         Mat temp = image.clone();
         if( show_canny )
@@ -73,7 +74,7 @@ int main(int argc, const char * argv[]) {
         
         /* Apply colormap for better representation of the accum matrix */
         applyColorMap( accum, accum, cv::COLORMAP_BONE );
-        resize( accum, accum, Size(), 4.0, 0.5 );
+        resize( accum, accum, Size(), 2.0 * resize_factor_x, 0.5 * resize_factor_y);
         
         /* Draw the lines based on threshold */
         vector<pair<Point, Point>> lines = hough.getLines( threshold );
@@ -83,7 +84,7 @@ int main(int argc, const char * argv[]) {
         
         /* Draw lines based on cursor position */
         if(accumIndex.x != -1 && accumIndex.y != -1 ) {
-            pair<Point, Point> point_pair = hough.getLine( accumIndex.y, accumIndex.x );
+            pair<Point, Point> point_pair = hough.getLine( accumIndex.y / resize_factor_y, accumIndex.x / resize_factor_x);
             line( temp, point_pair.first, point_pair.second, CV_RGB(0, 255, 0), 1 );
         }
         
@@ -121,6 +122,7 @@ int main(int argc, const char * argv[]) {
  * Mouse callback, to show the line based on which part of accumulation matrix the cursor is.
  */
 static void onMouse( int event, int x, int y, int, void * data ) {
+    cout << "Clicked " << x << ", " << y << endl;
     Rect *region = (Rect*) data;
     Point point( x, y );
     
