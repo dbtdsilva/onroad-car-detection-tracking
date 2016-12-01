@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include <tbb/tbb.h>
 
 #include "Hough.h"
 
@@ -47,7 +46,7 @@ int main(int argc, const char * argv[]) {
     
     /* Get the size of accum matrix in advance, for the mouse call back purpose  */
     Mat accum = hough.getAccumulationMatrix();
-    resize( accum, accum, Size(), 2.0, 0.5 );
+    resize( accum, accum, Size(), 4.0, 0.5 );
     Rect region( image.cols, 0, accum.cols, accum.rows );
     setMouseCallback( "", onMouse, static_cast<void*>( &region ) );
     
@@ -60,8 +59,6 @@ int main(int argc, const char * argv[]) {
     int threshold = 0;
     createTrackbar( "Hough threshold", "", &threshold, 1000 );
     
-    /* Stuff for drawing text */
-    //CvFont font = cvFontQt("Helvetica", 14.0, CV_RGB(0, 255, 0) );
     char str[255];
     
     while( true ) {
@@ -75,8 +72,8 @@ int main(int argc, const char * argv[]) {
         equalizeHist( accum, accum );
         
         /* Apply colormap for better representation of the accum matrix */
-        applyColorMap( accum, accum, cv::COLORMAP_JET );
-        resize( accum, accum, Size(), 2.0, 0.5 );
+        applyColorMap( accum, accum, cv::COLORMAP_BONE );
+        resize( accum, accum, Size(), 4.0, 0.5 );
         
         /* Draw the lines based on threshold */
         vector<pair<Point, Point>> lines = hough.getLines( threshold );
