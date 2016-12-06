@@ -14,7 +14,7 @@ file(COPY ${JPG} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY ${PNG} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 ADD_EXECUTABLE( hough hough.cpp hough_representation.cpp hough_representation.h )
-TARGET_LINK_LIBRARIES( hough ${OpenCV_LIBS} )
+TARGET_LINK_LIBRARIES( hough ${OpenCV_LIBS} -ltbb)
 
 ADD_EXECUTABLE( surfExample surfExample.cpp)
 TARGET_LINK_LIBRARIES( surfExample ${OpenCV_LIBS} )
