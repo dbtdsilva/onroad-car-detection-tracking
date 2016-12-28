@@ -60,16 +60,16 @@ int main(int argc, const char** argv)
 
 void detectAndSave(Mat& frame, CascadeClassifier& cascade)
 {
-    std::vector<Rect> faces;
+    std::vector<Rect> cars;
     Mat frame_gray;
     cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
     equalizeHist(frame_gray, frame_gray);
 
-    cascade.detectMultiScale(frame_gray, faces, 1.1, 2, 0, Size(10, 10));
-    for (size_t i = 0; i < faces.size(); i++)
+    cascade.detectMultiScale(frame_gray, cars, 1.1, 2, 0, Size(10, 10));
+    for (auto& car : cars)
     {
         Mat croppedImage;
-        cv::Mat(frame_gray, faces[i]).copyTo(croppedImage);
+        Mat(frame_gray, car).copyTo(croppedImage);
         Mat croppedDest;
         Size size(50, 50);
         resize(croppedImage,croppedDest,size);
@@ -82,7 +82,7 @@ void detectAndSave(Mat& frame, CascadeClassifier& cascade)
             imwrite(format("images/%d.png", imageCounter), croppedDest);
         }
 
-        rectangle(frame, faces[i], Scalar(0, 255, 0), 2);
+        rectangle(frame, car, Scalar(0, 255, 0), 2);
     }
 
     imshow("Frame", frame);
