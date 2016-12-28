@@ -5,5 +5,8 @@ FIND_PACKAGE(OpenCV REQUIRED)
 set(dir ${CMAKE_CURRENT_SOURCE_DIR})
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${dir}/build")
 
+ADD_EXECUTABLE(obtain_samples obtain_samples.cpp)
+TARGET_LINK_LIBRARIES(obtain_samples ${OpenCV_LIBS})
+
 ADD_EXECUTABLE(main main.cpp)
 TARGET_LINK_LIBRARIES(main ${OpenCV_LIBS})
