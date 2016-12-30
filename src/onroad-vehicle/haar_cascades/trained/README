@@ -1,0 +1,4 @@
+There is 3 folders in this trained folder:
+* dataset_original - Contains the negative and positive samples used to train Haar Cascades
+* dataset_16_16 - Contains the samples resized to 16x16, otherwise Haar Cascades would be really slow to train
+* imageclipper - Tool used to crop and store images from a video or a set of images
