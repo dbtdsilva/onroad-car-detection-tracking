@@ -1,3 +1,4 @@
 Folder description:
 * "downloaded" folder consists in pre-trained cascades found in specific websites (those sources are mentioned inside the .csv)
 * "trained" folder contains our trained data
+* "trained_results" contains symbolic links to the cascade xml
