@@ -11,9 +11,6 @@ using namespace std;
 using namespace cv;
 using namespace cv::xfeatures2d;
 
-void readme();
-
-#include <list>
 #define FRAMES_TO_SKIP 3
 
 int main(int argc, char** argv)
