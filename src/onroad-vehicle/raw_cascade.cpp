@@ -40,11 +40,8 @@ int main(int argc, const char** argv)
         }
 
         cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
-
-
-        //equalizeHist(frame_gray, frame_gray);
-
-        car_cascade.detectMultiScale(frame_gray, cars, 1.1, 1, 0,
+        equalizeHist(frame_gray, frame_gray);
+        car_cascade.detectMultiScale(frame_gray, cars, 1.05, 1, 0,
                                      Size(0, 0));
         for (const auto& car : cars) {
             rectangle(frame, car, Scalar(0, 255, 0), 2);

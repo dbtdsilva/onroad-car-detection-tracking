@@ -14,6 +14,12 @@ TARGET_LINK_LIBRARIES(obtain_samples ${OpenCV_LIBS})
 ADD_EXECUTABLE(raw_cascade raw_cascade.cpp)
 TARGET_LINK_LIBRARIES(raw_cascade ${OpenCV_LIBS})
 
+ADD_EXECUTABLE(false_positives false_positives.cpp)
+TARGET_LINK_LIBRARIES(false_positives ${OpenCV_LIBS})
+
+ADD_EXECUTABLE(detection detection.cpp)
+TARGET_LINK_LIBRARIES(detection ${OpenCV_LIBS})
+
 ADD_EXECUTABLE(main main.cpp)
 TARGET_LINK_LIBRARIES(main ${OpenCV_LIBS})
 
