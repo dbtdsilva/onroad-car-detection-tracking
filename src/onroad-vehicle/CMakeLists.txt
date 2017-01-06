@@ -13,3 +13,6 @@ TARGET_LINK_LIBRARIES(raw_cascade ${OpenCV_LIBS})
 
 ADD_EXECUTABLE(main main.cpp)
 TARGET_LINK_LIBRARIES(main ${OpenCV_LIBS})
+
+ADD_EXECUTABLE(tracker tracker.cpp)
+TARGET_LINK_LIBRARIES(tracker ${OpenCV_LIBS})
