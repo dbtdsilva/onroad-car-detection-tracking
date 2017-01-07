@@ -4,12 +4,7 @@ using namespace std;
 using namespace cv;
 
 
-DetectorHaarCascade::DetectorHaarCascade(string cascade_location) : DetectorHaarCascade(cascade_location, 2) {
-
-}
-
-DetectorHaarCascade::DetectorHaarCascade(string cascade_location, double cascade_scale) :
-    cascade_scale_(cascade_scale) {
+DetectorHaarCascade::DetectorHaarCascade(string cascade_location) {
     if (!classifier_.load(cascade_location))
         throw invalid_argument("Failed to load cascade file");
 }

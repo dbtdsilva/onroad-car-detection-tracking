@@ -9,12 +9,10 @@
 class DetectorHaarCascade {
 public:
     DetectorHaarCascade(std::string cascade_location);
-    DetectorHaarCascade(std::string cascade_location, double cascade_scale);
 
     std::vector<cv::Rect> detect(cv::Mat frame);
 private:
     cv::CascadeClassifier classifier_;
-    double cascade_scale_;
 };
 
 
