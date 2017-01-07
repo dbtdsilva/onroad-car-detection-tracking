@@ -32,7 +32,7 @@ int main(int argc, const char** argv)
         exit_with_message("Unable to open video file: ");
 
     int keyboard;
-    vector<Rect> cars;
+    vector<Rect> cars, cars_filtered;
     Mat frame_gray;
 
     /*Mat ycrcb;
@@ -48,15 +48,20 @@ int main(int argc, const char** argv)
 
     DetectorHaarCascade cascade(argv[2]);
     FilterFalsePositives fp;
+
+    vector<Mat> history;
+    int frame_counter = 0;
     do {
         if (!capture.read(frame))
             exit_with_message("Unable to read next frame.");
 
-        cars = cascade.detect(frame);
         cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
+        cars = cascade.detect(frame);
+
+        cars = fp.filter(frame_gray, cars, FilterType::MEAN_SQUARE);
+        //cars_filtered = fp.filter(frame, cars, FilterType::HSV_ROAD);
         for (auto& car : cars) {
-            if (fp.filter(frame_gray(car), FilterType::MEAN_SQUARE))
-                rectangle(frame, car, Scalar(0, 255, 0), 2);
+            rectangle(frame, car, Scalar(0, 255, 0), 2);
         }
         imshow("Camera", frame);
 

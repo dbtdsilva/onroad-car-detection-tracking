@@ -42,14 +42,24 @@ int main(int argc, const char** argv)
             exit(EXIT_FAILURE);
         }
 
+
         if (frame.empty())
             continue;
+
+        Mat ycrcb;
+        cvtColor(frame,ycrcb,CV_BGR2YCrCb);
+        vector<Mat> channels;
+        split(ycrcb,channels);
+        equalizeHist(channels[0], channels[0]);
+        Mat result;
+        merge(channels,ycrcb);
+        cvtColor(ycrcb,frame,CV_YCrCb2BGR);
 
         cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
         cvtColor(frame, frame_hsv, CV_BGR2HSV);
 
         GaussianBlur(frame_gray, frame_gray, Size(3, 3), 0, 0);
-        Canny(frame_gray, canny, 0, 100, 3);
+        Canny(frame_gray, canny, 100, 200, 3);
 
         Mat cannyInv;
         threshold(canny, cannyInv, 128, 255, THRESH_BINARY_INV);
@@ -91,11 +101,12 @@ int main(int argc, const char** argv)
         imshow("HSV", frame_hsv);
         Scalar scalar = sum(frame_hsv);
         cout << frame_hsv.size() << endl;
-        int averageHue = frame_hsv.at<Vec3b>(300, 260)[0];//scalar[0] / (frame_hsv.cols * frame_hsv.rows);
-        int averageSat = frame_hsv.at<Vec3b>(300, 260)[1];//scalar[1] / (frame_hsv.cols * frame_hsv.rows);
-        int averageVal = frame_hsv.at<Vec3b>(300, 260)[2];//scalar[2] / (frame_hsv.cols * frame_hsv.rows);
-        inRange(frame_hsv, cv::Scalar(averageHue - 200, averageSat - 15, averageVal - 20),
-                cv::Scalar(averageHue + 200, averageSat + 15, averageVal + 20), final);
+
+        int averageHue = frame_hsv.at<Vec3b>(390, 220)[0];//scalar[0] / (frame_hsv.cols * frame_hsv.rows);
+        int averageSat = frame_hsv.at<Vec3b>(390, 220)[1];//scalar[1] / (frame_hsv.cols * frame_hsv.rows);
+        int averageVal = frame_hsv.at<Vec3b>(390, 220)[2];//scalar[2] / (frame_hsv.cols * frame_hsv.rows);
+        inRange(frame_hsv, cv::Scalar(averageHue - 200, averageSat - 40, averageVal - 20),
+                cv::Scalar(averageHue + 200, averageSat + 40, averageVal + 20), final);
         //inRange(frame_hsv, cv::Scalar(scalar[0] - 180, scalar[1] - 15, scalar[2] - 20),
         //        cv::Scalar(scalar[0] + 180, scalar[1] + 15, scalar[2] + 20), final);
 
@@ -116,6 +127,7 @@ int main(int argc, const char** argv)
             rectangle(frame_new, car, Scalar(255), CV_FILLED);
         }
 
+        circle(frame, Point(220, 390), 15, Scalar(0, 0, 255), 10);
         Mat fram;
         cout << final.size() << frame_new.size() << endl;
         bitwise_and(final, frame_new, fram);

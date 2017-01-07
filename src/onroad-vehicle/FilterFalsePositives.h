@@ -6,15 +6,16 @@
 #include <vector>
 #include <string>
 
-enum class FilterType { MEAN_SQUARE };
+enum class FilterType { MEAN_SQUARE, HSV_ROAD };
 
 class FilterFalsePositives {
 public:
     FilterFalsePositives();
 
-    bool filter(cv::Mat frame, FilterType filter);
+    std::vector<cv::Rect> filter(cv::Mat frame, std::vector<cv::Rect> obj, FilterType filter);
 private:
-    bool filterMeanSquare(cv::Mat frame);
+    std::vector<cv::Rect> filterMeanSquare(cv::Mat frame, std::vector<cv::Rect> obj);
+    std::vector<cv::Rect> filterHSVRoad(cv::Mat frame, std::vector<cv::Rect> obj);
     double mse(const cv::Mat& frame1, const cv::Mat& frame2);
     double diffUpDown(const cv::Mat& in);
     double diffLeftRight(const cv::Mat& in);

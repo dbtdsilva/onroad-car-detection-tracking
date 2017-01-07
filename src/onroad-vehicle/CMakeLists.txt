@@ -30,3 +30,6 @@ TARGET_LINK_LIBRARIES(main ${OpenCV_LIBS})
 
 ADD_EXECUTABLE(tracker tracker.cpp)
 TARGET_LINK_LIBRARIES(tracker ${OpenCV_LIBS})
+
+ADD_EXECUTABLE(camshift camshift.cpp)
+TARGET_LINK_LIBRARIES(camshift ${OpenCV_LIBS})
