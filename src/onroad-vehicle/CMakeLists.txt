@@ -20,10 +20,10 @@ TARGET_LINK_LIBRARIES(false_positives ${OpenCV_LIBS})
 ADD_EXECUTABLE(detection detection.cpp DetectorMatchingFeatures.cpp)
 TARGET_LINK_LIBRARIES(detection ${OpenCV_LIBS})
 
-ADD_EXECUTABLE(main_new_tracker main_new_tracker.cpp)
+ADD_EXECUTABLE(main_new_tracker main_new_tracker.cpp DetectorHaarCascade.cpp)
 TARGET_LINK_LIBRARIES(main_new_tracker ${OpenCV_LIBS})
 
-ADD_EXECUTABLE(main main.cpp)
+ADD_EXECUTABLE(main main.cpp DetectorHaarCascade.cpp)
 TARGET_LINK_LIBRARIES(main ${OpenCV_LIBS})
 
 ADD_EXECUTABLE(tracker tracker.cpp)

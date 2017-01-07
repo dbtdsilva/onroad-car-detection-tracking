@@ -1,9 +1,8 @@
 #include "opencv2/objdetect/objdetect.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-#include <vector>
+#include "DetectorHaarCascade.h"
 #include <iostream>
-#include <stdio.h>
 
 using namespace std;
 using namespace cv;
@@ -100,6 +99,7 @@ int main(int argc, const char** argv)
     double diffX, diffY;
     Mat frame_gray;
 
+    DetectorHaarCascade detector(argv[2]);
     do {
         if (!capture.read(frame)) {
             cerr << "Unable to read next frame." << endl;
@@ -107,18 +107,15 @@ int main(int argc, const char** argv)
             exit(EXIT_FAILURE);
         }
 
-        cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
-
-        // scale down the frame to remove the very small boxes
-        height = frame_gray.size().height;
-        width = frame_gray.size().width;
+        // Scale down the frame to remove the very small boxes
+        height = frame.size().height;
+        width = frame.size().width;
         Mat tmp_frame_gray;
-        resize(frame_gray, tmp_frame_gray, Size(width/scale, height/scale));
+        resize(frame, tmp_frame_gray, Size(static_cast<int>(width / 2),
+                                           static_cast<int>(height / 2)));
+        cars = detector.detect(tmp_frame_gray);
 
-        car_cascade.detectMultiScale(tmp_frame_gray, cars, 1.2, 2);
-
-        //to remove the very big boxes
-        minY = tmp_frame_gray.size().height*0.3;
+        minY = static_cast<int>(tmp_frame_gray.size().height * 0.3);
 
         vector<Rect> newRegions;
         for (vector<Rect>::iterator it = cars.begin(); it != cars.end(); ++it) {
