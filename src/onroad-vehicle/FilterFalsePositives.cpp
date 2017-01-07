@@ -14,7 +14,7 @@ bool FilterFalsePositives::filter(Mat frame, FilterType type) {
     }
 }
 
-double mse(const Mat& frame1, const Mat& frame2) {
+double FilterFalsePositives::mse(const Mat& frame1, const Mat& frame2) {
     Mat s1;
     Mat f1 = frame1.clone();
     Mat f2 = frame2.clone();
@@ -29,7 +29,7 @@ double mse(const Mat& frame1, const Mat& frame2) {
     return mse;
 }
 
-double diffUpDown(const Mat& in) {
+double FilterFalsePositives::diffUpDown(const Mat& in) {
     Mat frame = in.clone();
     int height = frame.size().height;
     int width = frame.size().width;
@@ -46,7 +46,7 @@ double diffUpDown(const Mat& in) {
     return mse(top, bottom);
 }
 
-double diffLeftRight(const Mat& in) {
+double FilterFalsePositives::diffLeftRight(const Mat& in) {
     Mat frame = in.clone();
     int height = frame.size().height;
     int width = frame.size().width;

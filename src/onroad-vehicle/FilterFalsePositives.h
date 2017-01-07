@@ -15,6 +15,9 @@ public:
     bool filter(cv::Mat frame, FilterType filter);
 private:
     bool filterMeanSquare(cv::Mat frame);
+    double mse(const cv::Mat& frame1, const cv::Mat& frame2);
+    double diffUpDown(const cv::Mat& in);
+    double diffLeftRight(const cv::Mat& in);
 };
 
 #endif //ONROAD_VEHICLE_FILTERFPMEANSQUARE_H
