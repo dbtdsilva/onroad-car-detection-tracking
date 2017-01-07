@@ -12,7 +12,7 @@ DetectorHaarCascade::DetectorHaarCascade(string cascade_location) {
 vector<Rect> DetectorHaarCascade::detect(Mat frame) {
     vector<Rect> detections;
     cvtColor(frame, frame, COLOR_BGR2GRAY);
-    classifier_.detectMultiScale(frame, detections, 1.2, 2);
+    classifier_.detectMultiScale(frame, detections, 1.05, 1, 0, Size(0,0));
     return detections;
 }
 
