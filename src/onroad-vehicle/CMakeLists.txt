@@ -17,8 +17,11 @@ TARGET_LINK_LIBRARIES(raw_cascade ${OpenCV_LIBS})
 ADD_EXECUTABLE(false_positives false_positives.cpp)
 TARGET_LINK_LIBRARIES(false_positives ${OpenCV_LIBS})
 
-ADD_EXECUTABLE(detection detection.cpp)
+ADD_EXECUTABLE(detection detection.cpp DetectorMatchingFeatures.cpp)
 TARGET_LINK_LIBRARIES(detection ${OpenCV_LIBS})
+
+ADD_EXECUTABLE(main_new_tracker main_new_tracker.cpp)
+TARGET_LINK_LIBRARIES(main_new_tracker ${OpenCV_LIBS})
 
 ADD_EXECUTABLE(main main.cpp)
 TARGET_LINK_LIBRARIES(main ${OpenCV_LIBS})
