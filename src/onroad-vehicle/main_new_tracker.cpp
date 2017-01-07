@@ -2,6 +2,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "DetectorHaarCascade.h"
+#include "FilterFalsePositives.h"
 #include <vector>
 #include <iostream>
 #include <stdio.h>
@@ -34,19 +35,32 @@ int main(int argc, const char** argv)
     vector<Rect> cars;
     Mat frame_gray;
 
-    DetectorHaarCascade cascade(argv[2]);
+    /*Mat ycrcb;
+    cvtColor(frame,ycrcb,CV_BGR2YCrCb);
+    vector<Mat> channels;
+    split(ycrcb,channels);
+    equalizeHist(channels[0], channels[0]);
+    Mat result;
+    merge(channels,ycrcb);
+    cvtColor(ycrcb,result,CV_YCrCb2BGR);
+    cvtColor(result,result,COLOR_BGR2GRAY);
+    imshow("Equalized before", result);*/
 
+    DetectorHaarCascade cascade(argv[2]);
+    FilterFalsePositives fp;
     do {
         if (!capture.read(frame))
             exit_with_message("Unable to read next frame.");
 
-
         cars = cascade.detect(frame);
-
-        for (auto& car : cars)
-            rectangle(frame, car, Scalar(0, 255, 0), 2);
+        cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
+        for (auto& car : cars) {
+            if (fp.filter(frame_gray(car), FilterType::MEAN_SQUARE))
+                rectangle(frame, car, Scalar(0, 255, 0), 2);
+        }
         imshow("Camera", frame);
-        keyboard = waitKey(100);
+
+        keyboard = waitKey(30);
     } while((char)keyboard != 'q' && (char)keyboard != 'Q' && keyboard != 27 );
 
     return EXIT_SUCCESS;

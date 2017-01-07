@@ -125,6 +125,7 @@ int main(int argc, const char** argv)
 
         cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
 
+        //equalizeHist(frame_gray, frame_gray);
         // scale down the frame to remove the very small boxes
         height = frame_gray.size().height;
         width = frame_gray.size().width;

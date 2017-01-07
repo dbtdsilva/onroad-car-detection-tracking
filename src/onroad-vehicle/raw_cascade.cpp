@@ -43,9 +43,9 @@ int main(int argc, const char** argv)
         equalizeHist(frame_gray, frame_gray);
         car_cascade.detectMultiScale(frame_gray, cars, 1.05, 1, 0, Size(0, 0));
         for (const auto& car : cars) {
-            rectangle(frame, car, Scalar(0, 255, 0), 2);
+            rectangle(frame, car, Scalar(0, 0, 255), 2);
         }
-        imshow("Camera", frame);
+        imshow("Raw cascade", frame);
 
         keyboard = waitKey( 30 );
     } while((char)keyboard != 'q' && (char)keyboard != 'Q' && keyboard != 27 );
