@@ -59,7 +59,7 @@ int main(int argc, const char** argv)
         cars = cascade.detect(frame);
 
         cars = fp.filter(frame_gray, cars, FilterType::MEAN_SQUARE);
-        //cars_filtered = fp.filter(frame, cars, FilterType::HSV_ROAD);
+        //cars = fp.filter(frame.clone(), cars, FilterType::HSV_ROAD);
         for (auto& car : cars) {
             rectangle(frame, car, Scalar(0, 255, 0), 2);
         }
