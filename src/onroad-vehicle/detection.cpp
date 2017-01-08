@@ -15,7 +15,7 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-    DetectorMatchingFeatures matcher(3);
+    DetectorMatchingFeatures matcher(6);
     int keyboard;
     do {
         Mat img_object;
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
         }
 
         matcher.detect(img_object);
-        keyboard = waitKey(30);
+        keyboard = waitKey(1000);
     } while((char)keyboard != 'q' && (char)keyboard != 'Q' && keyboard != 27);
     return 0;
 }

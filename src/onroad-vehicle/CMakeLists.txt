@@ -42,8 +42,15 @@ TARGET_LINK_LIBRARIES(detection ${OpenCV_LIBS})
 
 ADD_EXECUTABLE(main_new_tracker main_new_tracker.cpp
         DetectorHaarCascade.cpp DetectorHaarCascade.h
-        FilterFalsePositives.cpp FilterFalsePositives.h TrackerOpenTLD.cpp TrackerOpenTLD.h MultiTrackerOpenTLD.cpp MultiTrackerOpenTLD.h Helper.cpp Helper.h)
+        FilterFalsePositives.cpp FilterFalsePositives.h TrackerOpenTLD.cpp TrackerOpenTLD.h MultiTrackerOpenTLD.cpp
+        MultiTrackerOpenTLD.h Helper.cpp Helper.h MultiTrackerOpenCV.cpp MultiTrackerOpenCV.h)
 TARGET_LINK_LIBRARIES(main_new_tracker ${OpenCV_LIBS} ${OPENTLD_LIBRARIES})
+
+ADD_EXECUTABLE(tracker_alternative tracker_alternative.cpp
+        DetectorHaarCascade.cpp DetectorHaarCascade.h
+        FilterFalsePositives.cpp FilterFalsePositives.h TrackerOpenTLD.cpp TrackerOpenTLD.h MultiTrackerOpenTLD.cpp
+        MultiTrackerOpenTLD.h Helper.cpp Helper.h MultiTrackerOpenCV.cpp MultiTrackerOpenCV.h)
+TARGET_LINK_LIBRARIES(tracker_alternative ${OpenCV_LIBS} ${OPENTLD_LIBRARIES})
 
 ADD_EXECUTABLE(main main.cpp DetectorHaarCascade.cpp DetectorHaarCascade.h FilterFalsePositives.cpp FilterFalsePositives.h)
 TARGET_LINK_LIBRARIES(main ${OpenCV_LIBS})

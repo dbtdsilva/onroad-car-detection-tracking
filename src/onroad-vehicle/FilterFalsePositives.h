@@ -13,9 +13,10 @@ public:
     FilterFalsePositives();
 
     std::vector<cv::Rect> filter(cv::Mat frame, std::vector<cv::Rect> obj, FilterType filter);
-private:
-    std::vector<cv::Rect> filterMeanSquare(cv::Mat frame, std::vector<cv::Rect> obj);
+    std::vector<cv::Rect> filterMeanSquare(cv::Mat frame, std::vector<cv::Rect> obj, int lower_x = 80,
+                                           int upper_x = 150, int lower_y = 200);
     std::vector<cv::Rect> filterHSVRoad(cv::Mat frame, std::vector<cv::Rect> obj);
+private:
     double mse(const cv::Mat& frame1, const cv::Mat& frame2);
     double diffUpDown(const cv::Mat& in);
     double diffLeftRight(const cv::Mat& in);

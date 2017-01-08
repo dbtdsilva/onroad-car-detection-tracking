@@ -98,7 +98,7 @@ vector<Rect> DetectorMatchingFeatures::detect(Mat img_next_frame) {
         prev_frame.push_back(keypoints_prev_frame[ good_matches[i].trainIdx ].pt);
     }
 
-    Mat H = findHomography(next_frame, prev_frame);
+    Mat H = findHomography(prev_frame, next_frame);
     try {
         /*
 
@@ -122,11 +122,11 @@ vector<Rect> DetectorMatchingFeatures::detect(Mat img_next_frame) {
 
          */
         Mat warped;
-        warpPerspective(img_next_frame, warped, H, img_prev_frame.size());
+        warpPerspective(img_prev_frame, warped, H, img_prev_frame.size());
 
         Mat diffImage;
         //subtract(img_prev_frame, warped, diffImage);
-        cv::absdiff(img_prev_frame, warped, diffImage);
+        cv::absdiff(img_next_frame, warped, diffImage);
 
         Mat image(img_prev_frame.rows, img_prev_frame.cols, img_prev_frame.type(), Scalar(0,0,0));
         imshow("Warped", diffImage - img_prev_frame);

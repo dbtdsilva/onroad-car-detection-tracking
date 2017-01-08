@@ -63,7 +63,7 @@ int main(int argc, const char** argv)
         imshow("Camera before filtering", frame_pre);
 
         cars = fp.filter(frame_gray, cars, FilterType::MEAN_SQUARE);
-        //cars = fp.filter(frame.clone(), cars, FilterType::HSV_ROAD);
+        cars = fp.filter(frame.clone(), cars, FilterType::HSV_ROAD);
         for (auto& car : cars) {
             bool already_in_list = false;
             for (auto& pair_tracker : multi_tracker.get_trackers()) {
