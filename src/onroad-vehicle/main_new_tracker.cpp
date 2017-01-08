@@ -12,6 +12,8 @@
 #include "DetectorHaarCascade.h"
 #include "FilterFalsePositives.h"
 #include "TrackerOpenTLD.h"
+#include "MultiTrackerOpenTLD.h"
+#include "Helper.h"
 
 using namespace std;
 using namespace cv;
@@ -64,6 +66,7 @@ int main(int argc, const char** argv)
     bool selected = false;
     int tracker_frames = 0;
     TrackerOpenTLD* tracker;
+    MultiTrackerOpenTLD multi_tracker;
     do {
         if (!capture.read(frame))
             exit_with_message("Unable to read next frame.");
@@ -80,30 +83,32 @@ int main(int argc, const char** argv)
         cars = fp.filter(frame_gray, cars, FilterType::MEAN_SQUARE);
         //cars = fp.filter(frame.clone(), cars, FilterType::HSV_ROAD);
         for (auto& car : cars) {
-            if (!selected) {
-                selected = true;
-                cout << "Selected.." << endl;
-                tracker = new TrackerOpenTLD(frame_gray, car);
+            bool already_in_list = false;
+            for (auto& pair_tracker : multi_tracker.get_trackers()) {
+                if (pair_tracker.second.get_current_bounding() == nullptr) continue;
+
+                if (Helper::overlapPercentage(car, *(pair_tracker.second.get_current_bounding())) > 0.3) {
+                    already_in_list = true;
+                    break;
+                }
             }
+            if (!already_in_list)
+                multi_tracker.add_tracker(car, frame_gray);
             rectangle(frame_final, car, Scalar(0, 255, 0), 2);
         }
 
-        if (selected) {
-            //trackerBoosting->update(frame, roi);
-            Rect* window = tracker->detect(frame);
-            if (window != nullptr) {
-            //if (tracker->update(frame, roi)) {
-                rectangle(frame_final, *window, Scalar(0, 0, 255), 2);
-            } else {
-                /*tracker_frames++;
-                cout << tracker_frames << endl;
-                if (tracker_frames >= 25) {
-                    selected = false;
-                    tracker_frames = 0;
-                }*/
+        multi_tracker.update_trackers(frame);
+        multi_tracker.check_for_dead_trackers();
+
+        cout << multi_tracker.get_trackers().size() << endl;
+        for (auto& pair_tracker : multi_tracker.get_trackers()) {
+            Rect* bounding = pair_tracker.second.get_current_bounding();
+            if (bounding != nullptr) {
+                rectangle(frame_final, *bounding, Scalar(0, 0, 255), 2);
             }
         }
         imshow("Camera", frame_final);
+
 
         keyboard = waitKey(20);
     } while((char)keyboard != 'q' && (char)keyboard != 'Q');

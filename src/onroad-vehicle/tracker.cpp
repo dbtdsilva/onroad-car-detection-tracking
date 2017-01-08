@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <cstring>
 #include <string>
+#include <cv.hpp>
 
 using namespace std;
 using namespace cv;
@@ -82,12 +83,14 @@ double overlapPercentage(const Rect& A, const Rect2d& B){
 
 int main(int argc, const char** argv)
 {
+    Mat flow, frame;
+    // some faster than mat image container
+    UMat  flowUmat, prevgray;
     if (argc < 3) {
         cout << "Usage: " << argv[0] << " video_file cascade_classifier.xml" << endl;
         return -1;
     }
 
-    Mat frame;
     CascadeClassifier car_cascade;
     if(!car_cascade.load(argv[2])) {
         cout << "Failed to load " << argv[2] << endl;
@@ -158,15 +161,17 @@ int main(int argc, const char** argv)
                 rects.push_back(*it);
 
         for (vector<Rect>::iterator it = rects.begin(); it != rects.end(); ++it) {
-
+            bool overlap = false;
             for(unsigned long i =0; i<trackers.size(); i++){
                 if(overlapPercentage(*it, rois[i])>0.3){
-                    rois.erase(rois.begin()+i);
+                    /*rois.erase(rois.begin()+i);
                     trackers.erase(trackers.begin()+i);
-                    i--;
+                    i--;*/
+                    overlap = true;
                 }
             }
-            trackers.push_back(Tracker::create("KCF"));
+            if (overlap) continue;
+            trackers.push_back(TrackerMedianFlow::createTracker());
             rois.push_back(Rect2d(*it));
             trackers[trackers.size()-1]->init(frame, rois[rois.size()-1]);
 
@@ -191,6 +196,46 @@ int main(int argc, const char** argv)
 
         putText(frame, "Frame "+to_string(actualFrameCount), cvPoint(8,20), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(0,0,0), 1, CV_AA);
 
+
+
+        // For all optical flow you need a sequence of images.. Or at least 2 of them. Previous                           //and current frame
+        //if there is no current frame
+        // go to this part and fill previous frame
+        //else {
+        // img.copyTo(prevgray);
+        //   }
+        // if previous frame is not empty.. There is a picture of previous frame. Do some                                  //optical flow alg.
+
+        if (prevgray.empty() == false ) {
+
+            // calculate optical flow
+            calcOpticalFlowFarneback(prevgray, frame_gray, flowUmat, 0.4, 1, 12, 2, 8, 1.2, 0);
+            // copy Umat container to standard Mat
+            flowUmat.copyTo(flow);
+
+
+            // By y += 5, x += 5 you can specify the grid
+            for (int y = 0; y < frame.rows; y += 25) {
+                for (int x = 0; x < frame.cols; x += 25)
+                {
+                    // get the flow from y, x position * 10 for better visibility
+                    const Point2f flowatxy = flow.at<Point2f>(y, x) * 10;
+                    // draw line at flow direction
+                    line(frame, Point(x, y), Point(cvRound(x + flowatxy.x), cvRound(y + flowatxy.y)), Scalar(0, 255, 0), 1);
+                    // draw initial point
+                    circle(frame, Point(x, y), 1, Scalar(0, 0, 0), -1);
+                }
+            }
+
+            // fill previous image again
+            frame_gray.copyTo(prevgray);
+
+        }
+        else {
+            // fill previous image in case prevgray.empty() == true
+            frame_gray.copyTo(prevgray);
+
+        }
         imshow("Camera", frame);
         keyboard = waitKey( 100 );
 
