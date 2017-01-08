@@ -19,6 +19,8 @@ private:
     double mse(const cv::Mat& frame1, const cv::Mat& frame2);
     double diffUpDown(const cv::Mat& in);
     double diffLeftRight(const cv::Mat& in);
+
+    std::vector<cv::Scalar> average_road_hsv;
 };
 
 #endif //ONROAD_VEHICLE_FILTERFPMEANSQUARE_H

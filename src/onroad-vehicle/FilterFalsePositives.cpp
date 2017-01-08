@@ -75,7 +75,10 @@ std::vector<cv::Rect> FilterFalsePositives::filterMeanSquare(Mat frame, std::vec
         double diffX = diffLeftRight(obj_frame);
         double diffY = diffUpDown(obj_frame);
 
-        if (diffX > 80 && diffX < 155 && diffY > 200) {
+        printf("%f %f\n", diffX, diffY);
+        //if (true) { //diffX > 20 && diffX < 155 && diffY < 200 && diffY > 100
+        // diffX > 150 && diffX < 175 &&
+        if (diffY > 185 && diffX > 60 && diffX < 150) {
             cars.push_back(car);
         }
     }
@@ -95,6 +98,7 @@ std::vector<cv::Rect> FilterFalsePositives::filterHSVRoad(Mat frame, std::vector
 
     cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
     cvtColor(frame, frame_hsv, CV_BGR2HSV);
+    imshow("HSV", frame_hsv);
 
     GaussianBlur(frame_gray, frame_gray, Size(3, 3), 0, 0);
     Canny(frame_gray, canny, 100, 200, 3);
@@ -104,11 +108,19 @@ std::vector<cv::Rect> FilterFalsePositives::filterHSVRoad(Mat frame, std::vector
 
     Mat hsv_filtered;
 
-    int averageHue = frame_hsv.at<Vec3b>(390, 220)[0];//scalar[0] / (frame_hsv.cols * frame_hsv.rows);
-    int averageSat = frame_hsv.at<Vec3b>(390, 220)[1];//scalar[1] / (frame_hsv.cols * frame_hsv.rows);
-    int averageVal = frame_hsv.at<Vec3b>(390, 220)[2];//scalar[2] / (frame_hsv.cols * frame_hsv.rows);
-    inRange(frame_hsv, cv::Scalar(averageHue - 200, averageSat - 40, averageVal - 20),
-            cv::Scalar(averageHue + 200, averageSat + 40, averageVal + 20), hsv_filtered);
+    // Assuming that the same camera is always used in the same position
+    average_road_hsv.push_back(Scalar(frame_hsv.at<Vec3b>(390, 220)[0],
+                                      frame_hsv.at<Vec3b>(390, 220)[1],
+                                      frame_hsv.at<Vec3b>(390, 220)[2]));
+    Scalar mean_road = mean(average_road_hsv);
+    if (average_road_hsv.size() >= 20)
+        average_road_hsv.erase(average_road_hsv.begin());
+    int averageHue = mean_road(0);//scalar[0] / (frame_hsv.cols * frame_hsv.rows);
+    int averageSat = mean_road(1);//scalar[1] / (frame_hsv.cols * frame_hsv.rows);
+    int averageVal = mean_road(2);//scalar[2] / (frame_hsv.cols * frame_hsv.rows);
+
+    inRange(frame_hsv, cv::Scalar(averageHue - 30, averageSat - 40, averageVal - 20),
+            cv::Scalar(averageHue + 30, averageSat + 40, averageVal + 20), hsv_filtered);
 
     // Create a black image with white blocks where the cars are located
     Mat frame_cars_white_blk = Mat::zeros(hsv_filtered.rows, hsv_filtered.cols, hsv_filtered.type());
@@ -117,16 +129,15 @@ std::vector<cv::Rect> FilterFalsePositives::filterHSVRoad(Mat frame, std::vector
         rectangle(frame_cars_white_blk, car, Scalar(255), CV_FILLED);
     }
 
-    imshow("a", frame_cars_white_blk);
+    imshow("HSV Filtered", hsv_filtered);
 
     Mat bitwise;
     // Bitwise AND between the black image and HSV filtered image
     bitwise_and(hsv_filtered, frame_cars_white_blk, bitwise);
-    imshow("b", bitwise);
     for (auto& car : obj) {
         Mat crop = bitwise(car);
         if (sum(crop).val[0] >= (crop.rows * crop.cols * 255 * 0.2) &&
-                sum(crop).val[0] < (crop.rows * crop.cols * 255 * 0.9)) {
+            sum(crop).val[0] < (crop.rows * crop.cols * 255 * 0.9)) {
             cars.push_back(car);
         }
     }

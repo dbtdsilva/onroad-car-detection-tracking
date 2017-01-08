@@ -58,10 +58,13 @@ int main(int argc, const char** argv)
         cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
         cars = cascade.detect(frame);
 
+
         cars = fp.filter(frame_gray, cars, FilterType::MEAN_SQUARE);
         //cars = fp.filter(frame.clone(), cars, FilterType::HSV_ROAD);
         for (auto& car : cars) {
-            rectangle(frame, car, Scalar(0, 255, 0), 2);
+            cout << car.height * car.width << endl;
+            if (car.height * car.width > 3000)
+                rectangle(frame, car, Scalar(0, 255, 0), 2);
         }
         imshow("Camera", frame);
 

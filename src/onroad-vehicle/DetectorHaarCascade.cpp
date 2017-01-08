@@ -22,10 +22,10 @@ vector<Rect> DetectorHaarCascade::detect(Mat frame) {
     cvtColor(frame, frame, COLOR_BGR2GRAY);
     equalizeHist(frame, frame_equalized);
 
-    //classifier_.detectMultiScale(frame, detections, 1.05, 1, 0, Size(0,0));
-    classifier_.detectMultiScale(frame_equalized, detections_equalized, 1.05, 1, 0, Size(0,0));
+    classifier_.detectMultiScale(frame, detections, 1.08, 1, 0, Size(0,0));
+    classifier_.detectMultiScale(frame_equalized, detections_equalized, 1.08, 1, 0, Size(0,0));
 
-    /*vector<Rect> final;
+    vector<Rect> final;
     for (auto& dec : detections_equalized) {
         for (auto& dec2 : detections) {
             if (overlapPercentage2(dec, dec2) >= 0.9) {
@@ -33,7 +33,7 @@ vector<Rect> DetectorHaarCascade::detect(Mat frame) {
                 break;
             }
         }
-    }*/
+    }
     return detections_equalized;
 }
 
