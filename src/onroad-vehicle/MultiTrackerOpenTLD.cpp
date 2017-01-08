@@ -28,6 +28,3 @@ void MultiTrackerOpenTLD::update_trackers(cv::Mat frame) {
 std::map<int, TrackerOpenTLD>& MultiTrackerOpenTLD::get_trackers() {
     return trackers;
 }
-
-void MultiTrackerOpenTLD::check_for_dead_trackers() {
-}

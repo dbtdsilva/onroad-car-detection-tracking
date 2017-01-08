@@ -41,31 +41,13 @@ int main(int argc, const char** argv)
         exit_with_message("Unable to open video file: ");
 
     int keyboard;
-    vector<Rect> cars, cars_filtered;
+    vector<Rect> cars;
     Mat frame_gray;
-
-    /*Mat ycrcb;
-    cvtColor(frame,ycrcb,CV_BGR2YCrCb);
-    vector<Mat> channels;
-    split(ycrcb,channels);
-    equalizeHist(channels[0], channels[0]);
-    Mat result;
-    merge(channels,ycrcb);
-    cvtColor(ycrcb,result,CV_YCrCb2BGR);
-    cvtColor(result,result,COLOR_BGR2GRAY);
-    imshow("Equalized before", result);*/
 
     DetectorHaarCascade cascade(argv[2]);
     FilterFalsePositives fp;
 
     vector<Mat> history;
-    int frame_counter = 0;
-
-    Rect2d roi, roi2;
-    Mat frame_equalized;
-    bool selected = false;
-    int tracker_frames = 0;
-    TrackerOpenTLD* tracker;
     MultiTrackerOpenTLD multi_tracker;
     do {
         if (!capture.read(frame))
@@ -98,19 +80,19 @@ int main(int argc, const char** argv)
         }
 
         multi_tracker.update_trackers(frame);
-        multi_tracker.check_for_dead_trackers();
 
-        cout << multi_tracker.get_trackers().size() << endl;
         for (auto& pair_tracker : multi_tracker.get_trackers()) {
             Rect* bounding = pair_tracker.second.get_current_bounding();
             if (bounding != nullptr) {
+                putText(frame_final, "Car "+to_string(pair_tracker.first),
+                        cvPoint(bounding->x + 20, bounding->y + 20), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(0, 0, 255), 1, CV_AA);
                 rectangle(frame_final, *bounding, Scalar(0, 0, 255), 2);
             }
         }
         imshow("Camera", frame_final);
 
 
-        keyboard = waitKey(20);
+        keyboard = waitKey(0);
     } while((char)keyboard != 'q' && (char)keyboard != 'Q');
 
     return EXIT_SUCCESS;

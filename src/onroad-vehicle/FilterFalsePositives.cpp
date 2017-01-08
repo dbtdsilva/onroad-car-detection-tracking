@@ -78,7 +78,7 @@ std::vector<cv::Rect> FilterFalsePositives::filterMeanSquare(Mat frame, std::vec
         printf("diffX: %f, diffY %f\n", diffX, diffY);
         //if (true) { //diffX > 20 && diffX < 155 && diffY < 200 && diffY > 100
         // diffX > 150 && diffX < 175 &&
-        if (diffX > 150 && diffY > 200) {
+        if (diffX > 80 && diffX < 150 && diffY > 200) {
             printf("in diffX: %f, diffY %f\n", diffX, diffY);
             cars.push_back(car);
         }

@@ -13,7 +13,6 @@ public:
     void add_tracker(cv::Rect window, cv::Mat frame);
     void update_trackers(cv::Mat frame);
     std::map<int, TrackerOpenTLD>& get_trackers();
-    void check_for_dead_trackers();
 private:
     int current_index;
     std::map<int, TrackerOpenTLD> trackers;
