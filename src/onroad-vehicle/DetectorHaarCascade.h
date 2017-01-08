@@ -10,7 +10,7 @@ class DetectorHaarCascade {
 public:
     DetectorHaarCascade(std::string cascade_location);
 
-    std::vector<cv::Rect> detect(cv::Mat frame);
+    std::vector<cv::Rect> detect(cv::Mat frame, cv::Size min_size, int neighbours, double scale, bool equalized = false);
 private:
     cv::CascadeClassifier classifier_;
 };

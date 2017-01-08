@@ -16,24 +16,27 @@ DetectorHaarCascade::DetectorHaarCascade(string cascade_location) {
         throw invalid_argument("Failed to load cascade file");
 }
 
-vector<Rect> DetectorHaarCascade::detect(Mat frame) {
+vector<Rect> DetectorHaarCascade::detect(Mat frame, Size min_size, int neighbours, double scale, bool equalized) {
     vector<Rect> detections, detections_equalized;
     Mat frame_equalized;
     cvtColor(frame, frame, COLOR_BGR2GRAY);
-    equalizeHist(frame, frame_equalized);
 
-    classifier_.detectMultiScale(frame, detections, 1.08, 1, 0, Size(0,0));
-    classifier_.detectMultiScale(frame_equalized, detections_equalized, 1.08, 1, 0, Size(0,0));
+    if (equalized) {
+        equalizeHist(frame, frame_equalized);
+        classifier_.detectMultiScale(frame_equalized, detections_equalized, scale, neighbours, 0, min_size);
 
-    vector<Rect> final;
-    for (auto& dec : detections_equalized) {
-        for (auto& dec2 : detections) {
-            if (overlapPercentage2(dec, dec2) >= 0.9) {
-                final.push_back(dec);
-                break;
+        /*vector<Rect> final;
+        for (auto& dec : detections_equalized) {
+            for (auto& dec2 : detections) {
+                if (overlapPercentage2(dec, dec2) >= 0.9) {
+                    final.push_back(dec);
+                    break;
+                }
             }
-        }
+        }*/
+    } else {
+        classifier_.detectMultiScale(frame, detections, scale, neighbours, 0, min_size);
     }
-    return detections_equalized;
+    return equalized ? detections_equalized : detections;
 }
 

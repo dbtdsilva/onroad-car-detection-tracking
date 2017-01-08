@@ -44,7 +44,7 @@ double FilterFalsePositives::diffUpDown(const Mat& in) {
     Mat top = frame(topCrop);
     Mat bottom = frame(bottomCrop);
 
-    flip(top, top, 1);
+    flip(top, top, 0);
     resize(bottom, bottom, Size(32, 64));
     resize(top, top, Size(32,64));
     return mse(top, bottom);
@@ -75,10 +75,11 @@ std::vector<cv::Rect> FilterFalsePositives::filterMeanSquare(Mat frame, std::vec
         double diffX = diffLeftRight(obj_frame);
         double diffY = diffUpDown(obj_frame);
 
-        printf("%f %f\n", diffX, diffY);
+        printf("diffX: %f, diffY %f\n", diffX, diffY);
         //if (true) { //diffX > 20 && diffX < 155 && diffY < 200 && diffY > 100
         // diffX > 150 && diffX < 175 &&
-        if (diffY > 185 && diffX > 60 && diffX < 150) {
+        if (diffX > 150 && diffY > 200) {
+            printf("in diffX: %f, diffY %f\n", diffX, diffY);
             cars.push_back(car);
         }
     }

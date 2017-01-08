@@ -56,20 +56,21 @@ int main(int argc, const char** argv)
             exit_with_message("Unable to read next frame.");
 
         cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
-        cars = cascade.detect(frame);
+        cars = cascade.detect(frame, Size(45, 45), 1, 1.05, true);
 
+        Mat frame_pre = frame.clone();
+        for (auto& car : cars)
+            rectangle(frame_pre, car, Scalar(0, 255, 0), 2);
+        imshow("Camera before filtering", frame_pre);
 
         cars = fp.filter(frame_gray, cars, FilterType::MEAN_SQUARE);
         //cars = fp.filter(frame.clone(), cars, FilterType::HSV_ROAD);
-        for (auto& car : cars) {
-            cout << car.height * car.width << endl;
-            if (car.height * car.width > 3000)
-                rectangle(frame, car, Scalar(0, 255, 0), 2);
-        }
+        for (auto& car : cars)
+            rectangle(frame, car, Scalar(0, 255, 0), 2);
         imshow("Camera", frame);
 
-        keyboard = waitKey(30);
-    } while((char)keyboard != 'q' && (char)keyboard != 'Q' && keyboard != 27 );
+        keyboard = waitKey(20);
+    } while((char)keyboard != 'q' && (char)keyboard != 'Q');
 
     return EXIT_SUCCESS;
 }
