@@ -62,7 +62,8 @@ int main(int argc, const char** argv)
             rectangle(frame_pre, car, Scalar(0, 255, 0), 2);
         imshow("Camera before filtering", frame_pre);
 
-        cars = fp.filter(frame_gray, cars, FilterType::MEAN_SQUARE);
+        //cars = fp.filter(frame_gray, cars, FilterType::MEAN_SQUARE);
+        cars = fp.filterMeanSquare(frame_gray, cars, 120, 170, 210);
         //cars = fp.filter(frame.clone(), cars, FilterType::HSV_ROAD);
         for (auto& car : cars) {
             bool already_in_list = false;

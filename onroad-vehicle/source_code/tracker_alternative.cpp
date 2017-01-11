@@ -107,8 +107,11 @@ int main(int argc, const char** argv)
 
     FilterFalsePositives fp_filter;
     DetectorHaarCascade detector(argv[2]);
-    MultiTrackerOpenCV multi_tracker;
-
+    // road.mp4
+    //MultiTrackerOpenCV multi_tracker("KCF");
+    // camera/
+    MultiTrackerOpenCV multi_tracker("BOOSTING");
+    // cacia2
     Mat final_frame;
     do {
         if (!capture.read(frame)) {
@@ -119,8 +122,14 @@ int main(int argc, const char** argv)
         final_frame = frame.clone();
 
         cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
-        cars = detector.detect(frame, Size(40, 40), 2, 1.2, false);//, 1, 1.05, true);
-        cars = fp_filter.filterMeanSquare(frame_gray, cars);//, 120, 170, 210);
+
+        // Road sample video (road.mp4)
+        //cars = detector.detect(frame, Size(80, 80), 2, 1.2, false);
+        //cars = fp_filter.filterMeanSquare(frame_gray, cars);
+
+        // Camera recoded videos (camera/)
+        cars = detector.detect(frame, Size(50, 50), 1, 1.05, true);
+        cars = fp_filter.filterMeanSquare(frame_gray, cars, 120, 170, 210);
         //cars = fp.filter(frame.clone(), cars, FilterType::HSV_ROAD);
         for (auto& car : cars) {
             bool replaced = false;
@@ -153,6 +162,5 @@ int main(int argc, const char** argv)
         keyboard = waitKey( 30 );
 
     } while((char)keyboard != 'q' && (char)keyboard != 'Q' && keyboard != 27 );
-
     return EXIT_SUCCESS;
 }

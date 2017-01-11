@@ -20,7 +20,7 @@ typedef struct {
 
 class MultiTrackerOpenCV {
 public:
-    MultiTrackerOpenCV();
+    MultiTrackerOpenCV(std::string name);
 
     void add_tracker(cv::Rect window, cv::Mat frame);
     void update_trackers(cv::Mat frame);
@@ -29,6 +29,7 @@ public:
 private:
     int current_index;
     std::map<int, TrackerData> trackers;
+    std::string name;
 };
 
 

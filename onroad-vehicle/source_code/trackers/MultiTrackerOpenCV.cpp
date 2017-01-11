@@ -4,14 +4,14 @@ using namespace std;
 using namespace cv;
 using namespace cv::xfeatures2d;
 
-MultiTrackerOpenCV::MultiTrackerOpenCV() : current_index(0) {
+MultiTrackerOpenCV::MultiTrackerOpenCV(std::string name) : current_index(0), name(name) {
 
 }
 
 void MultiTrackerOpenCV::add_tracker(cv::Rect window, cv::Mat frame) {
     current_index += 1;
     TrackerData data;
-    data.tracker = cv::Tracker::create("BOOSTING");
+    data.tracker = cv::Tracker::create(name);
     data.bounding_box = Rect2d(window);
     data.misses = 0;
     data.tracker->init(frame, data.bounding_box);
@@ -25,7 +25,10 @@ void MultiTrackerOpenCV::update_trackers(cv::Mat frame) {
                                      0 : pair_tracker.second.misses + 1;
 
         Rect2d box = pair_tracker.second.bounding_box;
-        if (pair_tracker.second.misses >= 5 || box.y + box.height > frame.rows || box.x + box.width > frame.cols || box.y <= 0 || box.x <= 0) {
+        if (pair_tracker.second.misses >= 5 ||
+                box.y + box.height >= frame.rows - 20 ||
+                box.x + box.width >= frame.cols - 20 ||
+                box.y <= 20 || box.x <= 20) {
             keys_to_remove.push_back(pair_tracker.first);
         }
     }
@@ -38,7 +41,7 @@ void MultiTrackerOpenCV::update_trackers(cv::Mat frame) {
 void MultiTrackerOpenCV::replace_bounding_box(int car_key, cv::Rect box, cv::Mat frame) {
     trackers.erase(trackers.find(car_key));
     TrackerData data;
-    data.tracker = cv::Tracker::create("BOOSTING");
+    data.tracker = cv::Tracker::create(name);
     data.bounding_box = Rect2d(box);
     data.misses = 0;
 
